@@ -6,10 +6,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.websockets import WebSocketState
 from llm import LlmClient
-# from llm_with_func_calling import LlmClient
-# from twilio_server import TwilioClient
-# from retellclient.models import operations
-# from twilio.twiml.voice_response import VoiceResponse
 import asyncio
 import retellclient
 from retellclient.models import operations, components
@@ -30,7 +26,7 @@ app.add_middleware(
 
 llm_client = LlmClient()
 retell = retellclient.RetellClient(
-    api_key="c795c317-cc58-48a0-b084-309c6743bfe5",
+    api_key=os.environ['RETELL_API_KEY']
 )
 class RegisterCallRequestBody(BaseModel):
     agent_id: str
@@ -39,6 +35,7 @@ class RegisterCallRequestBody(BaseModel):
 async def register_call(request_body: RegisterCallRequestBody):
     try:
         # Assuming 'retellClient' is an instance of the RetellClient class
+        print(request_body.agent_id)
         register_call_response = retell.register_call(operations.RegisterCallRequestBody(
             agent_id=request_body.agent_id,
             audio_websocket_protocol='web',
@@ -52,6 +49,7 @@ async def register_call(request_body: RegisterCallRequestBody):
         print("Error registering call:", e)
         # Raise HTTPException with 500 status code and error message
         raise HTTPException(status_code=500, detail="Failed to register call")
+
 @app.websocket("/llm-websocket/{call_id}")
 async def websocket_handler(websocket: WebSocket, call_id: str):
     await websocket.accept()
@@ -86,66 +84,3 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
         print(f'LLM WebSocket error for {call_id}: {e}')
     finally:
         print(f"LLM WebSocket connection closed for {call_id}")
-
-# html = """
-# <!DOCTYPE html>
-# <html>
-#     <head>
-#         <title>Chat</title>
-#     </head>
-#     <body>
-#         <h1>WebSocket Chat</h1>
-#         <form action="" onsubmit="sendMessage(event)">
-#             <input type="text" id="messageText" autocomplete="off"/>
-#             <button>Send</button>
-#         </form>
-#         <ul id='messages'>
-#         </ul>
-#         <script>
-#             var ws = new WebSocket("ws://localhost:8080/ws");
-#             ws.onmessage = function(event) {
-#                 var messages = document.getElementById('messages')
-#                 var message = document.createElement('li')
-#                 var content = document.createTextNode(event.data)
-#                 message.appendChild(content)
-#                 messages.appendChild(message)
-#             };
-#             function sendMessage(event) {
-#                 var input = document.getElementById("messageText")
-#                 ws.send(input.value)
-#                 input.value = ''
-#                 event.preventDefault()
-#             }
-#         </script>
-#     </body>
-# </html>
-# """
-
-
-@app.get("/")
-async def get1():
-    print("api called")
-    try:
-        # Assuming 'retellClient' is an instance of the RetellClient class
-        register_call_response = retell.register_call(operations.RegisterCallRequestBody(
-            agent_id="89c1973c7d9a78a63778e27be0ba7a9f",
-            audio_websocket_protocol='web',
-            audio_encoding='s16le',
-            sample_rate=24000
-        ))
-        response = register_call_response.raw_response.json()
-        print(response)
-        return response
-    except Exception as e:
-        # Log the error for debugging purposes
-        print("Error registering call:", e)
-        # Raise HTTPException with 500 status code and error message
-        raise HTTPException(status_code=500, detail="Failed to register call")
-
-
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        await websocket.send_text(f"Message text was: {data}")
