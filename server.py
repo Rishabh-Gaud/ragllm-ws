@@ -31,6 +31,7 @@ retell = retellclient.RetellClient(
 class RegisterCallRequestBody(BaseModel):
     agent_id: str
 
+
 @app.post("/register-call-on-your-server")
 async def register_call(request_body: RegisterCallRequestBody):
     try:
