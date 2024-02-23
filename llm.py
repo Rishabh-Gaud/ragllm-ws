@@ -1,4 +1,4 @@
-from openai import OpenAI
+from openai import AzureOpenAI
 import os
 
 beginSentence = "Hey there, I'm your personal AI therapist, how can I help you?"
@@ -6,9 +6,10 @@ agentPrompt = "Task: As a professional therapist, your responsibilities are comp
 
 class LlmClient:
     def __init__(self):
-        self.client = OpenAI(
-            # organization=os.environ['OPENAI_ORGANIZATION_ID'],
-            api_key=os.environ['OPENAI_API_KEY'],
+        self.client= AzureOpenAI(
+            azure_endpoint = os.environ['AZURE_OPENAI_ENDPOINT'],
+            api_key=os.environ['AZURE_OPENAI_KEY'],
+            api_version="2023-05-15"
         )
     
     def draft_begin_messsage(self):
@@ -54,7 +55,7 @@ class LlmClient:
     def draft_response(self, request):      
         prompt = self.prepare_prompt(request)
         stream = self.client.chat.completions.create(
-            model="gpt-4-1106-preview",
+            model="collegeitcall", 
             messages=prompt,
             stream=True,
         )
