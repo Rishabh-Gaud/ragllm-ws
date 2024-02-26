@@ -66,11 +66,11 @@ agentPrompt = "Task: As a professional university student ambassador, your respo
 listing_history=[]
 
 class LlmClient:
-    def __init__(self):
-        self.client = OpenAI(
-            # organization=os.environ['OPENAI_ORGANIZATION_ID'],
-            api_key=os.environ['OPENAI_API_KEY'],
-        )
+    # def __init__(self):
+        # self.client = OpenAI(
+        #     # organization=os.environ['OPENAI_ORGANIZATION_ID'],
+        #     api_key=os.environ['OPENAI_API_KEY'],
+        # )
     
     def draft_begin_messsage(self):
         return {
@@ -118,8 +118,8 @@ class LlmClient:
         #     listing_history=listing_history[len(listing_history)-5:]
 
         prompt_template = PromptTemplate(
-            input_variables=['query_text', 'retrieved','listing_history'],
-            template="Given the following information use this previous conversation between you and user:'{query_text}' and  tell them the answer of unaswers query of user role's content. "
+            input_variables=['query_text', 'retrieved','listing_history', 'Systemprompt'],
+            template="Given the following information use this previous conversation between you and user:'{query_text}' and  tell the answer of unaswer queries of user role's content. "
         )
         # query_embedding = model.encode(preparedPrompt) #preparedPrompt text
         # query_embedding = np.array([query_embedding]).astype('float32')
@@ -128,7 +128,7 @@ class LlmClient:
         # retrieved_list = [chunks[i] for i in I[0]]
 
         chain = LLMChain(llm=llm_openai, prompt=prompt_template)
-        stream = chain.run(query_text=preparedPrompt, retrieved="retrieved_list",listing_history="listing_history",stream=True)            
+        stream = chain.run(query_text=preparedPrompt, retrieved="retrieved_list",listing_history="listing_history", Systemprompt = Systemprompt,stream=True)            
         yield {
             "response_id": request['response_id'],
             "content": stream,
