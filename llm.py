@@ -121,13 +121,13 @@ class LlmClient:
             input_variables=['query_text', 'retrieved','listing_history'],
             template="Given the following information: '{retrieved}' and  . Answer the question: '{query_text}'. "
         )
-        query_embedding = model.encode(preparedPrompt) #preparedPrompt text
-        query_embedding = np.array([query_embedding]).astype('float32')
-        k = 10
-        D, I = faiss_index.search(query_embedding, k)
-        retrieved_list = [chunks[i] for i in I[0]]
+        # query_embedding = model.encode(preparedPrompt) #preparedPrompt text
+        # query_embedding = np.array([query_embedding]).astype('float32')
+        # k = 10
+        # D, I = faiss_index.search(query_embedding, k)
+        # retrieved_list = [chunks[i] for i in I[0]]
         chain = LLMChain(llm=llm_openai, prompt=prompt_template)
-        stream = chain.run(query_text=preparedPrompt, retrieved=retrieved_list,listing_history="listing_history",stream=True)            
+        stream = chain.run(query_text=preparedPrompt, retrieved="retrieved_list",listing_history="listing_history",stream=True)            
         # stream = self.client.chat.completions.create(
         #     model="gpt-3.5-turbo",
         #     messages=preparedPrompt,
