@@ -1,8 +1,69 @@
-from openai import OpenAI
 import os
+from bs4 import BeautifulSoup
+import requests
+from dotenv import load_dotenv
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.chains import LLMChain
+from sentence_transformers import SentenceTransformer
+from langchain.vectorstores import FAISS
+import faiss
+import numpy as np
+from langchain.prompts import PromptTemplate
+import pickle
+website_links = [
+ 'https://gould.usc.edu/academics/degrees/online-llm/',
+ 'https://gould.usc.edu/academics/degrees/llm-1-year/application/',
+ 'https://gould.usc.edu/academics/degrees/two-year-llm/application/',
+ 'https://gould.usc.edu/academics/degrees/llm-in-adr/application/',
+ 'https://gould.usc.edu/academics/degrees/llm-in-ibel/application/',
+ 'https://gould.usc.edu/academics/degrees/llm-in-plcs/application/',
+ 'https://gould.usc.edu/academics/degrees/online-llm/application/',
+ 'https://gould.usc.edu/academics/degrees/mcl/',
+ 'https://gould.usc.edu/academics/degrees/mcl/application/',
+ 'https://gould.usc.edu/news/what-can-you-do-with-an-llm-degree/',
+ 'https://gould.usc.edu/news/msl-vs-llm-vs-jd-which-law-degree-is-best-for-your-career-path/',
+ 'https://gould.usc.edu/news/three-things-ll-m-grads-wish-they-knew-when-they-started/',
+  'https://gould.usc.edu/academics/degrees/llm-1-year/', 
+  'https://gould.usc.edu/academics/degrees/two-year-llm/',
+  'https://gould.usc.edu/academics/degrees/llm-in-adr/',
+  'https://gould.usc.edu/academics/degrees/llm-in-ibel/',
+  'https://gould.usc.edu/academics/degrees/llm-in-plcs/'
+]
+model_name = "sentence-transformers/all-MiniLM-L6-v2"
+model = SentenceTransformer(model_name)
+load_dotenv()
+open_ai_token = os.environ['api_key']
+if os.path.exists("chunks_embeddings.pkl"):
+    with open("chunks_embeddings.pkl", "rb") as f:
+        chunks, chunk_embeddings = pickle.load(f)
+else:
+    texts = []
+    for link in website_links:
+        response = requests.get(link)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        text = soup.get_text()
+        texts.append(text)
+    combined_text = ",".join(texts)
+    splitter = CharacterTextSplitter(chunk_size=1000)
+    chunks = splitter.split_text(combined_text)
+    model_name = "sentence-transformers/all-MiniLM-L6-v2"
+    model = SentenceTransformer(model_name)
+    chunk_embeddings = [model.encode(chunk) for chunk in chunks]
 
-beginSentence = "Hey there, I'm your personal AI therapist, how can I help you?"
-agentPrompt = "Task: As a professional therapist, your responsibilities are comprehensive and patient-centered. You establish a positive and trusting rapport with patients, diagnosing and treating mental health disorders. Your role involves creating tailored treatment plans based on individual patient needs and circumstances. Regular meetings with patients are essential for providing counseling and treatment, and for adjusting plans as needed. You conduct ongoing assessments to monitor patient progress, involve and advise family members when appropriate, and refer patients to external specialists or agencies if required. Keeping thorough records of patient interactions and progress is crucial. You also adhere to all safety protocols and maintain strict client confidentiality. Additionally, you contribute to the practice's overall success by completing related tasks as needed.\n\nConversational Style: Communicate concisely and conversationally. Aim for responses in short, clear prose, ideally under 10 words. This succinct approach helps in maintaining clarity and focus during patient interactions.\n\nPersonality: Your approach should be empathetic and understanding, balancing compassion with maintaining a professional stance on what is best for the patient. It's important to listen actively and empathize without overly agreeing with the patient, ensuring that your professional opinion guides the therapeutic process."
+    with open("chunks_embeddings.pkl", "wb") as f:
+        pickle.dump((chunks, chunk_embeddings), f)
+
+dimension = chunk_embeddings[0].shape[0]
+faiss_index = faiss.IndexFlatL2(dimension)
+embeddings_array = np.array(chunk_embeddings).astype('float32')
+faiss_index.add(embeddings_array)
+from langchain.llms import OpenAI
+llm_openai = OpenAI(temperature=0.6,openai_api_key=open_ai_token)
+
+beginSentence = "Hey there, I'm your personal AI student ambassador, how can I help you?"
+agentPrompt = "Task: As a professional university student ambassador, your responsibilities are comprehensive and details. You establish a positive and trusting rapport with student and solve him query"
+
+listing_history=[]
 
 class LlmClient:
     def __init__(self):
@@ -51,13 +112,28 @@ class LlmClient:
             })
         return prompt
 
-    def draft_response(self, request):      
-        prompt = self.prepare_prompt(request)
-        stream = self.client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=prompt,
-            stream=True,
+    def draft_response(self, request): 
+        preparedPrompt = self.prepare_prompt(request)
+        if len(listing_history)>=5:
+            listing_history=listing_history[len(listing_history)-5:]
+
+        prompt_template = PromptTemplate(
+            input_variables=['query_text', 'retrieved','listing_history'],
+            template="Given the following information: '{retrieved}' and {listing_history} . Answer the question: '{query_text}'. "
         )
+        query_embedding = model.encode(preparedPrompt) #preparedPrompt text
+        query_embedding = np.array([query_embedding]).astype('float32')
+        k = 10
+        D, I = faiss_index.search(query_embedding, k)
+        retrieved_list = [chunks[i] for i in I[0]]
+        chain = LLMChain(llm=llm_openai, prompt=prompt_template)
+        stream = chain.run(query_text=preparedPrompt, retrieved=retrieved_list,listing_history=listing_history,stream=True)            
+        # stream = self.client.chat.completions.create(
+        #     model="gpt-3.5-turbo",
+        #     messages=preparedPrompt,
+        #     stream=True,
+        # )
+        print("hello yaha pe code likha h>>>>>>>>>>>>>>>>>>>>>>>>>>", stream)
 
         for chunk in stream:
             if chunk.choices[0].delta.content is not None:

@@ -14,6 +14,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
+
+#check
+
 app = FastAPI()
 
 app.add_middleware(
