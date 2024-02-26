@@ -136,6 +136,7 @@ class LlmClient:
         print("hello yaha pe code likha h>>>>>>>>>>>>>>>>>>>>>>>>>>", stream)
 
         for chunk in stream:
+            print(chunk, "hello world", stream)
             if chunk.choices[0].delta.content is not None:
                 yield {
                     "response_id": request['response_id'],
