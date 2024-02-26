@@ -76,6 +76,7 @@ class LlmClient:
         return {
             "response_id": 0,
             "content": beginSentence,
+            "content_complete": True,
             "end_call": False,
         }
     
