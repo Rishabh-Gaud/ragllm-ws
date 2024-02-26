@@ -28,3 +28,10 @@ twilio==8.12.0
 retell-sdk==2.0.1
 fastapi==0.100.1
 uvicorn==0.21.1
+streamlit
+beautifulsoup4
+requests
+sentence-transformers
+faiss-cpu  # or faiss-gpu if you're using GPU
+numpy
+langchain
