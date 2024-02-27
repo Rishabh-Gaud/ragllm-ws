@@ -63,6 +63,7 @@ llm_openai = OpenAI(temperature=0.6,openai_api_key=open_ai_token)
 beginSentence = "Hey there, I'm your personal AI student ambassador, how can I help you?"
 agentPrompt = "Task: As a professional university student ambassador, your responsibilities are comprehensive and details. You establish a positive and trusting rapport with student and solve him query"
 
+listing_history=[]
 
 class LlmClient:
     listing_history=[]
