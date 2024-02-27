@@ -63,14 +63,12 @@ llm_openai = OpenAI(temperature=0.6,openai_api_key=open_ai_token)
 beginSentence = "Hey there, I'm your personal AI student ambassador, how can I help you?"
 agentPrompt = "Task: As a professional university student ambassador, your responsibilities are comprehensive and details. You establish a positive and trusting rapport with student and solve him query"
 
-listing_history=[]
 
 class LlmClient:
-    # def __init__(self):
-        # self.client = OpenAI(
-        #     # organization=os.environ['OPENAI_ORGANIZATION_ID'],
-        #     api_key=os.environ['OPENAI_API_KEY'],
-        # )
+    listing_history=[]
+    
+    def __init__(self):
+        pass
     
     def draft_begin_messsage(self):
         return {
@@ -115,21 +113,32 @@ class LlmClient:
           agentPrompt
         }
         preparedPrompt = self.prepare_prompt(request)
-        # if len(listing_history)>=5:
-        #     listing_history=listing_history[len(listing_history)-5:]
+        
+        user_content = ""
+        for item in preparedPrompt:
+            # Check if the role is 'user' and content is not empty
+            if item["role"] == "user" and item["content"].strip() != "":
+                # Concatenate the user's content
+                user_content += item["content"] + " "
+        
+        self.listing_history.append(user_content)  
+        if len(self.listing_history) >= 5:
+            self.listing_history = self.listing_history[len(self.listing_history)-5:]
 
+        # print("Listing History:", self.listing_history)
         prompt_template = PromptTemplate(
             input_variables=['query_text', 'retrieved','listing_history', 'Systemprompt'],
-            template="Given the following information use this previous conversation between you and user:'{query_text}' and  tell the answer of unaswer queries of user role's content. "
+            template=" Given the following information: '{retrieved}' and use this previous conversation between you and user:'{query_text}' and  answer the question "
         )
-        # query_embedding = model.encode(preparedPrompt) #preparedPrompt text
-        # query_embedding = np.array([query_embedding]).astype('float32')
-        # k = 10
-        # D, I = faiss_index.search(query_embedding, k)
-        # retrieved_list = [chunks[i] for i in I[0]]
-
+        
+        query_embedding = model.encode(user_content) 
+        query_embedding = np.array([query_embedding]).astype('float32')
+        k = 10
+        D, I = faiss_index.search(query_embedding, k)
+        retrieved_list = [chunks[i] for i in I[0]]
+        # print(retrieved_list)
         chain = LLMChain(llm=llm_openai, prompt=prompt_template)
-        stream = chain.run(query_text=preparedPrompt, retrieved="retrieved_list",listing_history="listing_history", Systemprompt = Systemprompt,stream=True)            
+        stream = chain.run(query_text=preparedPrompt, retrieved=retrieved_list,listing_history=listing_history, Systemprompt = Systemprompt,stream=True)         
         yield {
             "response_id": request['response_id'],
             "content": stream,
