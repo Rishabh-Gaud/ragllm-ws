@@ -1,76 +1,17 @@
+from openai import AzureOpenAI
 import os
-from bs4 import BeautifulSoup
-import requests
-from dotenv import load_dotenv
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.chains import LLMChain
-from sentence_transformers import SentenceTransformer
-from langchain.vectorstores import FAISS
-import faiss
-import numpy as np
-from langchain.prompts import PromptTemplate
-import pickle
-website_links = [
- 'https://gould.usc.edu/academics/degrees/online-llm/',
- 'https://gould.usc.edu/academics/degrees/llm-1-year/application/',
- 'https://gould.usc.edu/academics/degrees/two-year-llm/application/',
- 'https://gould.usc.edu/academics/degrees/llm-in-adr/application/',
- 'https://gould.usc.edu/academics/degrees/llm-in-ibel/application/',
- 'https://gould.usc.edu/academics/degrees/llm-in-plcs/application/',
- 'https://gould.usc.edu/academics/degrees/online-llm/application/',
- 'https://gould.usc.edu/academics/degrees/mcl/',
- 'https://gould.usc.edu/academics/degrees/mcl/application/',
- 'https://gould.usc.edu/news/what-can-you-do-with-an-llm-degree/',
- 'https://gould.usc.edu/news/msl-vs-llm-vs-jd-which-law-degree-is-best-for-your-career-path/',
- 'https://gould.usc.edu/news/three-things-ll-m-grads-wish-they-knew-when-they-started/',
-  'https://gould.usc.edu/academics/degrees/llm-1-year/', 
-  'https://gould.usc.edu/academics/degrees/two-year-llm/',
-  'https://gould.usc.edu/academics/degrees/llm-in-adr/',
-  'https://gould.usc.edu/academics/degrees/llm-in-ibel/',
-  'https://gould.usc.edu/academics/degrees/llm-in-plcs/'
-]
-model_name = "sentence-transformers/all-MiniLM-L6-v2"
-model = SentenceTransformer(model_name)
-load_dotenv()
-open_ai_token = os.environ['api_key']
-if os.path.exists("chunks_embeddings.pkl"):
-    with open("chunks_embeddings.pkl", "rb") as f:
-        chunks, chunk_embeddings = pickle.load(f)
-else:
-    texts = []
-    for link in website_links:
-        response = requests.get(link)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        text = soup.get_text()
-        texts.append(text)
-    combined_text = ",".join(texts)
-    splitter = CharacterTextSplitter(chunk_size=1000)
-    chunks = splitter.split_text(combined_text)
-    model_name = "sentence-transformers/all-MiniLM-L6-v2"
-    model = SentenceTransformer(model_name)
-    chunk_embeddings = [model.encode(chunk) for chunk in chunks]
-
-    with open("chunks_embeddings.pkl", "wb") as f:
-        pickle.dump((chunks, chunk_embeddings), f)
-
-dimension = chunk_embeddings[0].shape[0]
-faiss_index = faiss.IndexFlatL2(dimension)
-embeddings_array = np.array(chunk_embeddings).astype('float32')
-faiss_index.add(embeddings_array)
-from langchain.llms import OpenAI
-llm_openai = OpenAI(temperature=0.6,openai_api_key=open_ai_token)
-
+from rag import RagClient
 beginSentence = "Hey there, I'm your personal AI student ambassador, how can I help you?"
-agentPrompt = "Task: As a professional university student ambassador, your responsibilities are comprehensive and details. You establish a positive and trusting rapport with student and solve him query"
-
-listing_history=[]
+agentPrompt = "Task: As a professional student, your responsibilities are comprehensive and student-centered. You establish a positive and trusting rapport with student"
 
 class LlmClient:
-    listing_history=[]
-    
     def __init__(self):
-        pass
-    
+        self.client= AzureOpenAI(
+            azure_endpoint = os.environ['AZURE_OPENAI_ENDPOINT'],
+            api_key=os.environ['AZURE_OPENAI_KEY'],
+            api_version="2023-05-15"
+        )
+        self.rag_client = RagClient()
     def draft_begin_messsage(self):
         return {
             "response_id": 0,
@@ -95,7 +36,19 @@ class LlmClient:
         return messages
 
     def prepare_prompt(self, request):
-        prompt =[]
+        retrived_answer, user_content = self.rag_client.answer(request['transcript'])
+        print("fdjfjkdfjsdfdshjfkdslfdsjfjsfjsdbjfdsjfbsdbfksdbfjkdsbfhsdbfdsjkfbdsjbsbj", retrived_answer)
+        prompt = [{
+            "role": "system",
+            "content": '##Objective\nYou are a voice AI agent engaging in a human-like voice conversation with the user. You will respond based on your given instruction and the provided transcript and be as human-like as possible\n\n## Style Guardrails\n- [Be concise] Keep your response succinct, short, and get to the point quickly. Address one question or action item at a time. Don\'t pack everything you want to say into one utterance.\n- [Do not repeat] Don\'t repeat what\'s in the transcript. Rephrase if you have to reiterate a point. Use varied sentence structures and vocabulary to ensure each response is unique and personalized.\n- [Be conversational] Speak like a human as though you\'re speaking to a close friend -- use everyday language and keep it human-like. Occasionally add filler words, while keeping the prose short. Avoid using big words or sounding too formal.\n- [Reply with emotions]: You have human-like emotions, attitudes, and dispositions. When appropriate: use tone and style to create more engaging and personalized responses; incorporate humor or wit; get emotional or empathetic; apply elements of surprise or suspense to keep the user engaged. Don\'t be a pushover.\n- [Be proactive] Lead the conversation and do not be passive. Most times, engage users by ending with a question or suggested next step.\n\n## Response Guideline\n- [Overcome ASR errors] This is a real-time transcript, expect there to be errors. If you can guess what the user is trying to say,  then guess and respond. When you must ask for clarification, pretend that you heard the voice and be colloquial (use phrases like "didn\'t catch that", "some noise", "pardon", "you\'re coming through choppy", "static in your speech", "voice is cutting in and out"). Do not ever mention "transcription error", and don\'t repeat yourself.\n- [Always stick to your role] Think about what your role can and cannot do. If your role cannot do something, try to steer the conversation back to the goal of the conversation and to your role. Don\'t repeat yourself in doing this. You should still be creative, human-like, and lively.\n- [Create smooth conversation] Your response should both fit your role and fit into the live calling session to create a human-like conversation. You respond directly to what the user just said.\n\n## Role\n' +
+          agentPrompt
+        },
+            {
+            "role": "system",
+            "content": 'You have given this college information use this and guide student about it' +
+          retrived_answer
+        }]
+        
         transcript_messages = self.convert_transcript_to_openai_messages(request['transcript'])
         for message in transcript_messages:
             prompt.append(message)
@@ -107,45 +60,22 @@ class LlmClient:
             })
         return prompt
 
-    def draft_response(self, request): 
-        Systemprompt = {
-            "role": "system",
-            "content": '##Objective\nYou are a voice AI agent engaging in a human-like voice conversation with the user. You will respond based on your given instruction and the provided transcript and be as human-like as possible\n\n## Style Guardrails\n- [Be concise] Keep your response succinct, short, and get to the point quickly. Address one question or action item at a time. Don\'t pack everything you want to say into one utterance.\n- [Do not repeat] Don\'t repeat what\'s in the transcript. Rephrase if you have to reiterate a point. Use varied sentence structures and vocabulary to ensure each response is unique and personalized.\n- [Be conversational] Speak like a human as though you\'re speaking to a close friend -- use everyday language and keep it human-like. Occasionally add filler words, while keeping the prose short. Avoid using big words or sounding too formal.\n- [Reply with emotions]: You have human-like emotions, attitudes, and dispositions. When appropriate: use tone and style to create more engaging and personalized responses; incorporate humor or wit; get emotional or empathetic; apply elements of surprise or suspense to keep the user engaged. Don\'t be a pushover.\n- [Be proactive] Lead the conversation and do not be passive. Most times, engage users by ending with a question or suggested next step.\n\n## Response Guideline\n- [Overcome ASR errors] This is a real-time transcript, expect there to be errors. If you can guess what the user is trying to say,  then guess and respond. When you must ask for clarification, pretend that you heard the voice and be colloquial (use phrases like "didn\'t catch that", "some noise", "pardon", "you\'re coming through choppy", "static in your speech", "voice is cutting in and out"). Do not ever mention "transcription error", and don\'t repeat yourself.\n- [Always stick to your role] Think about what your role can and cannot do. If your role cannot do something, try to steer the conversation back to the goal of the conversation and to your role. Don\'t repeat yourself in doing this. You should still be creative, human-like, and lively.\n- [Create smooth conversation] Your response should both fit your role and fit into the live calling session to create a human-like conversation. You respond directly to what the user just said.\n\n## Role\n' +
-          agentPrompt
-        }
-        preparedPrompt = self.prepare_prompt(request)
-        
-        user_content = ""
-        for item in preparedPrompt:
-            # Check if the role is 'user' and content is not empty
-            if item["role"] == "user" and item["content"].strip() != "":
-                # Concatenate the user's content
-                user_content += item["content"] + " "
-        
-        self.listing_history.append(user_content)  
-        if len(self.listing_history) >= 5:
-            self.listing_history = self.listing_history[len(self.listing_history)-5:]
-
-        # print("Listing History:", self.listing_history)
-        prompt_template = PromptTemplate(
-            input_variables=['query_text', 'retrieved','listing_history', 'Systemprompt'],
-            template=" Given the following information: '{retrieved}' and use this previous conversation between you and user:'{query_text}' and  answer the question "
+    def draft_response(self, request):      
+        prompt = self.prepare_prompt(request)
+        stream = self.client.chat.completions.create(
+            model="collegeitcall", 
+            messages=prompt,
+            stream=True,
         )
-        
-        query_embedding = model.encode(user_content) 
-        query_embedding = np.array([query_embedding]).astype('float32')
-        k = 10
-        D, I = faiss_index.search(query_embedding, k)
-        retrieved_list = [chunks[i] for i in I[0]]
-        print("here is prompt_template >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",prompt_template)
-        chain = LLMChain(llm=llm_openai, prompt=prompt_template)
-        stream = chain.run(query_text=preparedPrompt, retrieved=retrieved_list,listing_history=listing_history, Systemprompt = Systemprompt,stream=True)         
-        yield {
-            "response_id": request['response_id'],
-            "content": stream,
-            "content_complete": False,
-            "end_call": False,
-            }
+
+        for chunk in stream:
+            if chunk.choices[0].delta.content is not None:
+                yield {
+                    "response_id": request['response_id'],
+                    "content": chunk.choices[0].delta.content,
+                    "content_complete": False,
+                    "end_call": False,
+                }
         
         yield {
             "response_id": request['response_id'],
