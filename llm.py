@@ -137,7 +137,7 @@ class LlmClient:
         k = 10
         D, I = faiss_index.search(query_embedding, k)
         retrieved_list = [chunks[i] for i in I[0]]
-        # print(retrieved_list)
+        print("here is prompt_template >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",prompt_template)
         chain = LLMChain(llm=llm_openai, prompt=prompt_template)
         stream = chain.run(query_text=preparedPrompt, retrieved=retrieved_list,listing_history=listing_history, Systemprompt = Systemprompt,stream=True)         
         yield {
