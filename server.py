@@ -54,7 +54,7 @@ async def register_call(request_body: RegisterCallRequestBody):
         # Raise HTTPException with 500 status code and error message
         raise HTTPException(status_code=500, detail="Failed to register call")
 
-@app.websocket("/llm-websocket/{call_id}")
+@app.websocket("/ws/{call_id}")
 async def websocket_handler(websocket: WebSocket, call_id: str):
     await websocket.accept()
     print(f"Handle llm ws for: {call_id}")
@@ -91,50 +91,50 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
         print(f"LLM WebSocket connection closed for {call_id}")
 
 
-html = """
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Chat</title>
-    </head>
-    <body>
-        <h1>WebSocket Chat</h1>
-        <form action="" onsubmit="sendMessage(event)">
-            <input type="text" id="messageText" autocomplete="off"/>
-            <button>Send</button>
-        </form>
-        <ul id='messages'>
-        </ul>
-        <script>
-            var ws = new WebSocket("wss://rag.collegeit.in/ws");
-            ws.onmessage = function(event) {
-                var messages = document.getElementById('messages')
-                var message = document.createElement('li')
-                var content = document.createTextNode(event.data)
-                message.appendChild(content)
-                messages.appendChild(message)
-            };
-            function sendMessage(event) {
-                var input = document.getElementById("messageText")
-                ws.send(input.value)
-                input.value = ''
-                event.preventDefault()
-            }
-        </script>
-    </body>
-</html>
-"""
+# html = """
+# <!DOCTYPE html>
+# <html>
+#     <head>
+#         <title>Chat</title>
+#     </head>
+#     <body>
+#         <h1>WebSocket Chat</h1>
+#         <form action="" onsubmit="sendMessage(event)">
+#             <input type="text" id="messageText" autocomplete="off"/>
+#             <button>Send</button>
+#         </form>
+#         <ul id='messages'>
+#         </ul>
+#         <script>
+#             var ws = new WebSocket("wss://rag.collegeit.in/ws");
+#             ws.onmessage = function(event) {
+#                 var messages = document.getElementById('messages')
+#                 var message = document.createElement('li')
+#                 var content = document.createTextNode(event.data)
+#                 message.appendChild(content)
+#                 messages.appendChild(message)
+#             };
+#             function sendMessage(event) {
+#                 var input = document.getElementById("messageText")
+#                 ws.send(input.value)
+#                 input.value = ''
+#                 event.preventDefault()
+#             }
+#         </script>
+#     </body>
+# </html>
+# """
 
 
-@app.get("/")
-async def get():
-    return HTMLResponse(html)
+# @app.get("/")
+# async def get():
+#     return HTMLResponse(html)
 
 
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        await websocket.send_text(f"Message text was: {data}")
+# @app.websocket("/ws")
+# async def websocket_endpoint(websocket: WebSocket):
+#     await websocket.accept()
+#     while True:
+#         data = await websocket.receive_text()
+#         await websocket.send_text(f"Message text was: {data}")
 
