@@ -43,8 +43,8 @@ class RagClient:
 
         self.llm_openai = OpenAI(temperature=0.6, openai_api_key=self.open_ai_token)
         
-        if 'listing_history' not in st.session_state:
-            st.session_state['listing_history'] = []
+        # if 'listing_history' not in st.session_state:
+        #     st.session_state['listing_history'] = []
 
     def load_dotenv(self):
         load_dotenv()
