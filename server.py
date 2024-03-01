@@ -106,7 +106,7 @@ html = """
         <ul id='messages'>
         </ul>
         <script>
-            var ws = new WebSocket("ws://rag.collegeit.in/ws");
+            var ws = new WebSocket("wss://rag.collegeit.in/ws");
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
