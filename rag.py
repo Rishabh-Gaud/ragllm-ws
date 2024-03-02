@@ -74,22 +74,14 @@ class RagClient:
         self.faiss_index.add(embeddings_array)
 
     def answer(self, text):
-        # listing_history = st.session_state['listing_history']
-        # if len(listing_history) >= 5:
-        #     listing_history = listing_history[len(listing_history) - 5:]
-
-        # prompt_template = PromptTemplate(
-        #     input_variables=['query_text', 'retrieved', 'listing_history'],
-        #     template="Given the following information: '{retrieved}' and {listing_history}. Answer the question: '{query_text}'. "
-        # )
         user_content = ""
+        start_time = time.time()
         for item in text:
         # Check if the role is 'user' and content is not empty
             if item["role"] == "user" and item["content"].strip() != "":
                 # Concatenate the user's content
                 user_content += item["content"] + " "
             
-        start_time = time.time()
         query_embedding = self.model.encode(user_content)
         query_embedding = np.array([query_embedding]).astype('float32')
         k = 10
@@ -99,6 +91,7 @@ class RagClient:
             return "\n".join(map(str, data_list))
         result = concatenate_strings(retrieved_list)
         end_time = time.time()
+        print("rag time taken: ",start_time, end_time, end_time - start_time)
         # chain = LLMChain(llm=self.llm_openai, prompt=prompt_template)
         # response_stream = chain.run(query_text=text, retrieved=retrieved_list, listing_history=listing_history, stream=True)
         return result, user_content

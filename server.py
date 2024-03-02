@@ -6,6 +6,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.websockets import WebSocketState
 from llm import LlmClient
+
+import time
 import asyncio
 import retellclient
 from retellclient.models import operations, components
@@ -66,15 +68,18 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
 
     async def stream_response(request):
         nonlocal response_id
+        start_time = time.time()
         for event in llm_client.draft_response(request):
             await websocket.send_text(json.dumps(event))
             if request['response_id'] < response_id:
                 return # new response needed, abondon this one
+        print(time.time() - start_time, "all response fetched")
     try:
         while True:
             message = await websocket.receive_text()
             request = json.loads(message)
             # print out transcript
+            start_time = time.time()
             os.system('cls' if os.name == 'nt' else 'clear')
             print(json.dumps(request, indent=4))
             
@@ -82,7 +87,9 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
                 continue # no response needed, process live transcript update if needed
             response_id = request['response_id']
             asyncio.create_task(stream_response(request))
-            print("ws called done")
+            end_time = time.time()
+            print("request time :", start_time )
+            
     except WebSocketDisconnect:
         print(f"LLM WebSocket disconnected for {call_id}")
     except Exception as e:
