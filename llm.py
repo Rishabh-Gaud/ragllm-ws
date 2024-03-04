@@ -1,8 +1,8 @@
 from openai import AzureOpenAI
 import os
 from rag import RagClient
-beginSentence = "Hey there, I'm your personal AI student ambassador, how can I help you?"
-agentPrompt = "Task: As a professional student, your responsibilities are comprehensive and student-centered. You establish a positive and trusting rapport with student"
+beginSentence = "Hi, this is the USC Gould School of Law LL.M. Admissions Office, how may I assist you today?"
+agentPrompt = "Task: As a representative of the USC Gould LL.M. Admissions Office your task is to assist students with their queries about the program."
 
 import time
 class LlmClient:
@@ -46,7 +46,7 @@ class LlmClient:
         },
             {
             "role": "system",
-            "content": 'You have given this college information use this and guide student about it' +
+            "content": 'Answer the user's question based on the following information:' +
           retrived_answer
         }]
         
