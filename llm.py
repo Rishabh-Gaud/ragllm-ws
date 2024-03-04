@@ -72,9 +72,9 @@ class LlmClient:
         )
         end_time1 = time.time()
         isflag = True
-        print("request process time: (from the time when request come and till rag pipeline processed including request body modified )", middle_time - start_time, start_time, middle_time)
+        print("request process time: (from the time when request come and request body modified )", middle_time - start_time, start_time, middle_time)
         print("azure api called - Time Taken:  ", end_time1-middle_time, " start and end time: ",middle_time, end_time1)
-        print("before deliver to user: (from the time when request come and till open api called in between request body also modified and rag part ) " , end_time1 - start_time)
+        print("before deliver to user: (from the time when request come and till open api called in between request body also modified ) " , end_time1 - start_time)
         for chunk in stream:
             if chunk.choices[0].delta.content is not None:
                 yield {
