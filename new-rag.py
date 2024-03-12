@@ -1,18 +1,3 @@
-import os
-from bs4 import BeautifulSoup
-import requests
-from dotenv import load_dotenv
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.chains import LLMChain
-from sentence_transformers import SentenceTransformer
-from langchain.vectorstores import FAISS
-import time
-import faiss
-import numpy as np
-from langchain.prompts import PromptTemplate
-import pickle
-import streamlit as st
-from langchain.llms import OpenAI
 from tqdm.rich import trange, tqdm
 from rich import console
 from rich.panel import Panel
@@ -24,14 +9,13 @@ import datetime
 from rich.console import Console
 console = Console(width=110)
 from transformers import pipeline
-
+import os
 from keybert import KeyBERT
 
 from keybert import KeyBERT
 kw_model = KeyBERT(model='intfloat/multilingual-e5-base')
 
 logfile = 'KeyBERT-Log.txt'
-
 
 def writehistory(text):
     with open(logfile, 'a', encoding='utf-8') as f:
@@ -53,32 +37,8 @@ def extract_keys(text, ngram,dvsity):
     writehistory(logging_text)
     return tags
 
-class RagClient:
-    def __init__(self):
-        self.website_links = [
-            # 'https://gould.usc.edu/academics/degrees/online-llm/',
-            # 'https://gould.usc.edu/academics/degrees/llm-1-year/application/',
-            # 'https://gould.usc.edu/academics/degrees/two-year-llm/application/',
-            # 'https://gould.usc.edu/academics/degrees/llm-in-adr/application/',
-            # 'https://gould.usc.edu/academics/degrees/llm-in-ibel/application/',
-            # 'https://gould.usc.edu/academics/degrees/llm-in-plcs/application/',
-            'https://gould.usc.edu/academics/degrees/online-llm/application/',
-            # 'https://gould.usc.edu/academics/degrees/mcl/',
-            # 'https://gould.usc.edu/academics/degrees/mcl/application/',
-            # 'https://gould.usc.edu/news/what-can-you-do-with-an-llm-degree/',
-            # 'https://gould.usc.edu/news/msl-vs-llm-vs-jd-which-law-degree-is-best-for-your-career-path/',
-            # 'https://gould.usc.edu/news/three-things-ll-m-grads-wish-they-knew-when-they-started/',
-            # 'https://gould.usc.edu/academics/degrees/llm-1-year/',
-            # 'https://gould.usc.edu/academics/degrees/two-year-llm/',
-            # 'https://gould.usc.edu/academics/degrees/llm-in-adr/',
-            # 'https://gould.usc.edu/academics/degrees/llm-in-ibel/',
-            # 'https://gould.usc.edu/academics/degrees/llm-in-plcs/'
-        ]
-        self.dataset =[
-            {
-            'Title':"Application Instructions - Master of International Trade Law and Economics (MITLE)",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'Context': """Eligibility
+text = """
+Eligibility
 To qualify for admission to the Master of International Trade Law and Economics, you must have earned your bachelor's degree in any field, within or outside of the United States, by the time you enroll at USC Gould School of Law. Students are required to have a solid foundation in mathematics at the university level, including calculus. If you hold a degree from a university within the United States, USC Graduate Admissions requires that it must be a regionally accredited institution.
 If you are currently earning your degree and will complete it prior to the start of your studies, you may be admitted, but will be required to complete certain continuing registration requirements. You must submit official final transcripts showing your degree was awarded before you may begin your studies.
 We do not require work experience or an LSAT or a GRE score to be considered for admission to any of our graduate degrees. Should you elect to submit an LSAT or GRE score report to supplement your application, such score will not play a key role in our admission decision-making process to ensure an equitable process for all applicants.
@@ -130,99 +90,55 @@ Admission Decisions
 Admissions decisions are made upon receipt of complete application files. Incomplete applications are not reviewed. We encourage you to apply by our Priority Deadline to provide sufficient time for you to complete your application file. Our Admissions Committee will provide admissions decisions generally within 3-4 weeks upon our receipt of completed applications, beginning in January for Fall semester start and beginning in July for Spring semester start. You will be notified via email and postal mail. No admissions decisions will be released over the phone. We will contact you if the Admissions Committee recommends an interview or additional submissions.
 Financial Statement
 If you are admitted, you will be required to provide a financial statement that certifies that you have sufficient funds available to meet your living (housing, meals, etc.) and tuition expenses while at USC (unless you are a U.S. citizen or permanent resident, or have been granted political asylum). At that time, you also must submit a copy of the photo page of your passport (and passport copies of any dependent(s) traveling with you).
-
 """
-            },
-        ]
-        self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
-        self.model = SentenceTransformer(self.model_name)
-        self.load_dotenv()
-        self.open_ai_token = os.environ['api_key']
-        self.load_embeddings()
 
-        # self.llm_openai = OpenAI(temperature=0.6, openai_api_key=self.open_ai_token)
-        
-        # if 'listing_history' not in st.session_state:
-        #     st.session_state['listing_history'] = []
+a = extract_keys(text, 1,0.32)
+console.print(f"[bold]Keywords: {a}")
 
-    def load_dotenv(self):
-        load_dotenv()
+filename = 'Magicoder Source Code Is All You Need.txt'
+with open(filename, encoding="utf8") as f:
+  fulltext = f.read()
+f.close()
+console.print("Text has been saved into variable [bold]fulltext")
+title = 'Magicoder: Source Code Is All You Need'
+filename = '2023-12-03 18.41.12 Governing societies with Artificial Intelligence.txt'
+author = 'Yuxiang Wei, Zhe Wang, Jiawei Liu, Yifeng Ding, Lingming Zhang'
+url = 'https://arxiv.org/pdf/2312.02120v1.pdf'
 
-    def load_embeddings(self):
-        if os.path.exists("chunks_embeddings.pkl"):
-            with open("chunks_embeddings.pkl", "rb") as f:
-                self.chunks, self.chunk_embeddings = pickle.load(f)
-            # for data in self.dataset:
-                # response = requests.get(link)
-                # soup = BeautifulSoup(response.text, 'html.parser')
-                # text = soup.get_text()
-                # print("extracted_text", text)
-        else:
-            texts = []
-            # for link in self.website_links:
-            #     response = requests.get(link)
-            #     soup = BeautifulSoup(response.text, 'html.parser')
-            #     text = soup.get_text()
-            #     print("extracted_text", text)
-            #     texts.append(text)
-            for data in self.dataset:
-                # response = requests.get(link)
-                # soup = BeautifulSoup(response.text, 'html.parser')
-                # text = soup.get_text()
-                splitter = CharacterTextSplitter(chunk_size=330)
-                self.chunks = splitter.split_text(data['Context'])
-                tags = extract_keys(data['Context'], 1,0.32)
-                # print(self.chunks,"extracted_text", tags)
-                i = 0
-                self.chunk_embeddings = [self.model.encode(chunk + str(extract_keys(chunk, 1, 0.35))) for chunk in self.chunks]
-                print("chunks_embeddings: ", self.chunk_embeddings)
-            with open("chunks_embeddings.pkl", "wb") as f:
-                pickle.dump((self.chunks, self.chunk_embeddings), f)
+from langchain.document_loaders import TextLoader
+from langchain.text_splitter import TokenTextSplitter
 
-        dimension = self.chunk_embeddings[0].shape[0]
-        self.faiss_index = faiss.IndexFlatL2(dimension)
-        embeddings_array = np.array(self.chunk_embeddings).astype('float32')
-        self.faiss_index.add(embeddings_array)
-        # dimension = self.chunk_embeddings[0].shape[1]  # Get the dimension of each embedding vector
-        # self.faiss_index = faiss.IndexFlatL2(dimension)  # Initialize the Faiss index
-        # embeddings_array = np.concatenate(self.chunk_embeddings, axis=0).astype('float32')  # Concatenate all embeddings into a single array
-        # self.faiss_index.add(embeddings_array)  # Add the embeddings to the Faiss index
+text_splitter = TokenTextSplitter(chunk_size=350, chunk_overlap=10)
+splitted_text = text_splitter.split_text(fulltext)
 
-    def answer(self, text):
-        user_content = ""
-        start_time = time.time()
-        # for item in text:
-        # # Check if the role is 'user' and content is not empty
-        #     if item["role"] == "user" and item["content"].strip() != "":
-        #         # Concatenate the user's content
-        #         user_content += item["content"] + " "
-            
-        query_embedding = self.model.encode(text)
-        query_embedding = np.array([query_embedding]).astype('float32')
-        k = 10
-        D, I = self.faiss_index.search(query_embedding, k)
-        retrieved_list = [self.chunks[i] for i in I[0]]
-        def concatenate_strings(data_list):
-            return "\n".join(map(str, data_list))
-        result = concatenate_strings(retrieved_list)
-        end_time = time.time()
-        print("rag time taken: ",start_time, end_time, end_time - start_time)
-        # chain = LLMChain(llm=self.llm_openai, prompt=prompt_template)
-        # response_stream = chain.run(query_text=text, retrieved=retrieved_list, listing_history=listing_history, stream=True)
-        return result, user_content
-    def run_chatbot(self):
-        st.header("Welcome to LLM Chatbot")
+console.print(len(splitted_text))
+console.print("---")
+console.print(splitted_text[0])
 
-        user_query = st.text_input("Enter the query:", key="user_query")
+keys = []
+for i in trange(0,len(splitted_text)):
+  text = splitted_text[i]
+  keys.append({'document' : filename,
+              'title' : title,
+              'author' : author,
+              'url' : url,
+              'doc': text,
+              'keywords' : extract_keys(text, 1, 0.34)
+  })
 
-        if st.button("Answer"):
-            if user_query.lower() == "exit":
-                st.stop() 
-            else:
-                output, user_content = self.answer(user_query)
-                st.write(user_query)
-                st.write(output) 
+console.print(keys[1])
 
-if __name__ == "__main__":
-    chatbot = RagClient()
-    chatbot.run_chatbot()
+############### CREATE cHUnKS DOC DATABASE ##################
+from langchain.schema.document import Document
+goodDocs = []
+for i in range(0,len(keys)):
+  goodDocs.append(Document(page_content = keys[i]['doc'],
+                          metadata = {'source': keys[i]['document'],
+                              'type': 'chunk',
+                              'title': keys[i]['title'],
+                              'author': keys[i]['author'],
+                              'url' : keys[i]['url'],
+                              'keywords' : keys[i]['keywords']
+                              }))
+
+console.print(goodDocs[1])

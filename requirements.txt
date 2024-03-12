@@ -36,3 +36,8 @@ faiss-cpu  # or faiss-gpu if you're using GPU
 numpy
 langchain
 groq
+keybert
+transformers
+tiktoken
+tqdm
+rich 
