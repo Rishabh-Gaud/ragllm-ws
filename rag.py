@@ -110,7 +110,7 @@ class RagClient:
         ]
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
         self.model = SentenceTransformer(self.model_name)
-        self.open_ai_token = os.environ['api_key']
+        # self.open_ai_token = os.environ['api_key']
         self.load_embeddings()
 
     #     self.llm_openai = OpenAI(temperature=0.6, openai_api_key=self.open_ai_token)
