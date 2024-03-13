@@ -107,6 +107,26 @@ class RagClient:
             'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
             'filename' :'Application Instructions - Master of Dispute Resolution (MDR).txt'
             },
+            {
+            'Title':"Application Instructions - Master of International Trade Law and Economics (MITLE)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'Application Instructions - Master of International Trade Law and Economics (MITLE).txt'
+            },
+            {
+            'Title':"Application Instructions Extended Master of Laws (LLM)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'Application Instructions Extended Master of Laws (LLM).txt'
+            },
+            {
+            'Title':"Application Instructions LLM in ADR",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'Application Instructions LLM in ADR.txt'
+            },
+            {
+            'Title':"Application Instructions LLM in International Business and Economic Law",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'Application Instructions LLM in International Business and Economic Law.txt'
+            },
         ]
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
         self.model = SentenceTransformer(self.model_name)
@@ -146,8 +166,8 @@ class RagClient:
                         self.chunks_with_metadata.append(chunk_with_metadata)
                         processed_chunks.add(chunk_with_metadata)  # Add the processed chunk to the set
                 print("chunks_embeddings: ", self.chunk_embeddings)
-            with open("chunks_embeddings.pkl", "wb") as f:
-                pickle.dump((self.chunks_with_metadata, self.chunk_embeddings), f)
+            # with open("chunks_embeddings.pkl", "wb") as f:
+            #     pickle.dump((self.chunks_with_metadata, self.chunk_embeddings), f)
 
         dimension = self.chunk_embeddings[0].shape[0]
         self.faiss_index = faiss.IndexFlatL2(dimension)
@@ -169,7 +189,7 @@ class RagClient:
             
         query_embedding = self.model.encode(text)
         query_embedding = np.array([query_embedding]).astype('float32')
-        k = 10
+        k = 6
         D, I = self.faiss_index.search(query_embedding, k)
         retrieved_list = [self.chunks[i] for i in I[0]]
         retrieved_object_list = []
@@ -178,21 +198,19 @@ class RagClient:
             pattern = r"METADATA:\s+\[([^\]]+)\]"
 
             # Using regular expression to find the MetaData array
-            metadata_match = re.search(pattern, self.chunks[i])
+            metadata_match = re.search(pattern, self.chunks_with_metadata[i])
 
             if metadata_match:
                 metadata_array = metadata_match.group(1)
                 metadata_list = re.findall(r"'(.*?)'", metadata_array)
                 self.metaData = metadata_list
                 retrieved_object_list.append({
-                    "content": self.chunks[i],
+                    "content": self.chunks_with_metadata[i],
                     "metaData": self.metaData
                 })
             else:
                 print("No MetaData array found.")
                 
-                
-        print(retrieved_object_list, "fdjfjdsfjdsnfdsnfdsfjdsfj")
         
         def concatenate_strings(data_list):
             return "\n".join(map(str, data_list))
@@ -206,7 +224,7 @@ class RagClient:
         },
             {
             "role": "system",
-            "content": "Answer the user's question based on the following information:" +
+            "content": "Answer the user's question based on the following information and use metaData as well to give answer: " +
           result
         },
             {
@@ -222,7 +240,7 @@ class RagClient:
         )
         # chain = LLMChain(llm=self.llm_openai, prompt=prompt_template)
         # response_stream = chain.run(query_text=text, retrieved=retrieved_list, listing_history=listing_history, stream=True)
-        return result, stream.choices[0].message.content
+        return retrieved_object_list, stream.choices[0].message.content
     def run_chatbot(self):
         st.header("Welcome to LLM Chatbot")
 
