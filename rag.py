@@ -34,7 +34,7 @@ agentPrompt = "Task: As a representative of the USC Gould LL.M. Admissions Offic
 from keybert import KeyBERT
 
 from keybert import KeyBERT
-kw_model = KeyBERT(model='intfloat/multilingual-e5-base')
+kw_model = KeyBERT()
 
 logfile = 'KeyBERT-Log.txt'
 
