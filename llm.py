@@ -17,7 +17,7 @@ class LlmClient:
             # organization=os.environ['OPENAI_ORGANIZATION_ID'],
             api_key=os.environ['GROQ_API_KEY'],
         )
-        self.rag_client = RagClient()
+        # self.rag_client = RagClient()
     def draft_begin_messsage(self):
         return {
             "response_id": 0,
