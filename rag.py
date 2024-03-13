@@ -56,7 +56,7 @@ def extract_keys(text, ngram,dvsity):
     timestamped = datetime.datetime.now()
     #LOG THE TEXT AND THE METATAGS
     logging_text = f"LOGGED ON: {str(timestamped)}\nMETADATA: {str(tags)}\nsettings: keyphrase_ngram_range (1,{str(ngram)})  Diversity {str(dvsity)}\n---\nORIGINAL TEXT:\n{text}\n---\n\n"
-    writehistory(logging_text)
+    # writehistory(logging_text)
     return tags
 
 class RagClient:
