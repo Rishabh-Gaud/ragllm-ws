@@ -32,33 +32,6 @@ from langchain.retrievers.self_query.base import SelfQueryRetriever
 from langchain.chains.query_constructor.base import AttributeInfo
 
 agentPrompt = "Task: As a representative of the USC Gould LL.M. Admissions Office your task is to assist students with their queries about the program."
-# from keybert import KeyBERT
-
-# from keybert import KeyBERT
-# kw_model = KeyBERT()
-
-# logfile = 'KeyBERT-Log.txt'
-
-
-# def writehistory(text):
-#     with open(logfile, 'a', encoding='utf-8') as f:
-#         f.write(text)
-#         f.write('\n')
-#     f.close()
-
-# def extract_keys(text, ngram,dvsity):
-#     import datetime
-#     import random
-#     a = kw_model.extract_keywords(text, keyphrase_ngram_range=(1, ngram), stop_words='english',
-#                               use_mmr=True, diversity=dvsity, highlight=True)     #highlight=True
-#     tags = []
-#     for kw in a:
-#         tags.append(str(kw[0]))
-#     timestamped = datetime.datetime.now()
-#     #LOG THE TEXT AND THE METATAGS
-#     logging_text = f"LOGGED ON: {str(timestamped)}\nMETADATA: {str(tags)}\nsettings: keyphrase_ngram_range (1,{str(ngram)})  Diversity {str(dvsity)}\n---\nORIGINAL TEXT:\n{text}\n---\n\n"
-#     # writehistory(logging_text)
-#     return tags
 
 class RagClient:
     def __init__(self):
@@ -70,73 +43,102 @@ class RagClient:
             # organization=os.environ['OPENAI_ORGANIZATION_ID'],
             api_key=os.environ['GROQ_API_KEY'],
         )
-        # self.website_links = [
-        #     # 'https://gould.usc.edu/academics/degrees/online-llm/',
-        #     # 'https://gould.usc.edu/academics/degrees/llm-1-year/application/',
-        #     # 'https://gould.usc.edu/academics/degrees/two-year-llm/application/',
-        #     # 'https://gould.usc.edu/academics/degrees/llm-in-adr/application/',
-        #     # 'https://gould.usc.edu/academics/degrees/llm-in-ibel/application/',
-        #     # 'https://gould.usc.edu/academics/degrees/llm-in-plcs/application/',
-        #     'https://gould.usc.edu/academics/degrees/online-llm/application/',
-        #     # 'https://gould.usc.edu/academics/degrees/mcl/',
-        #     # 'https://gould.usc.edu/academics/degrees/mcl/application/',
-        #     # 'https://gould.usc.edu/news/what-can-you-do-with-an-llm-degree/',
-        #     # 'https://gould.usc.edu/news/msl-vs-llm-vs-jd-which-law-degree-is-best-for-your-career-path/',
-        #     # 'https://gould.usc.edu/news/three-things-ll-m-grads-wish-they-knew-when-they-started/',
-        #     # 'https://gould.usc.edu/academics/degrees/llm-1-year/',
-        #     # 'https://gould.usc.edu/academics/degrees/two-year-llm/',
-        #     # 'https://gould.usc.edu/academics/degrees/llm-in-adr/',
-        #     # 'https://gould.usc.edu/academics/degrees/llm-in-ibel/',
-        #     # 'https://gould.usc.edu/academics/degrees/llm-in-plcs/'
-        # ]
         self.dataset =[
             {
             'Title':"Alternative Dispute Resolution (ADR) Certificate",
             'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
             'filename' :'files/Alternative Dispute Resolution (ADR) Certificate.txt',
-            "tags" : ["usc", "delhi","ucla"]
+            "tags" : ["ucla"]
             },
             {
             'Title':"Application Instructions - Alternate Dispute Resolution (ADR) Certificate",
             'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
             'filename' :'files/Application Instructions - Alternate Dispute Resolution (ADR) Certificate.txt',
-            "tags" : ["usc", "delhi","ucla"]
+            "tags" : ["ucla"]
             },
             {
             'Title':"Application Instructions - Master of Comparative Law (MCL)",
             'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
             'filename' :'files/Application Instructions - Master of Comparative Law (MCL).txt',
-            "tags" : ["usc", "delhi","ucla"]
+            "tags" : ["ucla"]
             },
             {
             'Title':"Application Instructions - Master of Dispute Resolution (MDR)",
             'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
             'filename' :'files/Application Instructions - Master of Dispute Resolution (MDR).txt',
-            "tags" : ["usc", "delhi","ucla"]
+            "tags" : ["ucla"]
             },
             {
             'Title':"Application Instructions - Master of International Trade Law and Economics (MITLE)",
             'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
             'filename' :'files/Application Instructions - Master of International Trade Law and Economics (MITLE).txt',
-            "tags" : ["usc", "delhi","ucla"]
+            "tags" : ["ucla"]
             },
             {
             'Title':"Application Instructions Extended Master of Laws (LLM)",
             'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
             'filename' :'files/Application Instructions Extended Master of Laws (LLM).txt',
-            "tags" : ["usc", "delhi","ucla"]
+            "tags" : ["ucla"]
             },
             {
             'Title':"Application Instructions LLM in ADR",
             'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
             'filename' :'files/Application Instructions LLM in ADR.txt',
-            "tags" : ["usc", "delhi","ucla"]
+            "tags" : ["ucla"]
             },
             {
             'Title':"Application Instructions LLM in International Business and Economic Law",
             'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
             'filename' :'files/Application Instructions LLM in International Business and Economic Law.txt',
-            "tags" : ["usc", "delhi","ucla"]
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions LLM in Privacy Law and Cybersecurity",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions LLM in Privacy Law and Cybersecurity.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions Master of Comparative Law (MCL)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions Master of Comparative Law (MCL).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions Master of Laws (LLM) - Online",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions Master of Laws (LLM) - Online.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions Master of Laws (LLM) Degree",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions Master of Laws (LLM) Degree.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Bar and Certificate Tracks Master of Laws (LLM) - Online",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Bar and Certificate Tracks Master of Laws (LLM) - Online.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Campus Housing - 1 yr Master of Laws (LLM) Degree",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Campus Housing - 1 yr Master of Laws (LLM) Degree.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Campus Housing - LLM in ADR",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Campus Housing - LLM in ADR.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Campus Housing - LLM in International Business and Economic Law",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Campus Housing - LLM in International Business and Economic Law.txt',
+            "tags" : ["ucla"]
             },
         ]
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
