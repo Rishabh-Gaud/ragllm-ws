@@ -6,7 +6,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.websockets import WebSocketState
 from llm import LlmClient
-
+from rag import RagClient
+from groq import Groq
 import time
 import asyncio
 import retellclient
@@ -30,6 +31,7 @@ app.add_middleware(
 )
 
 llm_client = LlmClient()
+rag_client = RagClient()
 retell = retellclient.RetellClient(
     api_key=os.environ['RETELL_API_KEY']
 )
@@ -133,9 +135,29 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
 # """
 
 
-# @app.get("/")
-# async def get():
-#     return HTMLResponse(html)
+@app.post("/test/rag")
+async def request_body(text):
+    objectList, answer = rag_client.answer(text)
+    return {"question asked": text, "answer": answer, "response objects": objectList}
+
+# @app.post("/register-call-on-your-server")
+# async def register_call(request_body: RegisterCallRequestBody):
+#     try:
+#         # Assuming 'retellClient' is an instance of the RetellClient class
+#         print(request_body.agent_id)
+#         register_call_response = retell.register_call(operations.RegisterCallRequestBody(
+#             agent_id=request_body.agent_id,
+#             audio_websocket_protocol='web',
+#             audio_encoding='s16le',
+#             sample_rate=24000
+#         ))
+#         response =  register_call_response.raw_response.json()
+#         return response
+#     except Exception as e:
+#         # Log the error for debugging purposes
+#         print("Error registering call:", e)
+#         # Raise HTTPException with 500 status code and error message
+#         raise HTTPException(status_code=500, detail="Failed to register call")
 
 
 # @app.websocket("/ws")
