@@ -44,162 +44,7 @@ class RagClient:
             api_key=os.environ['GROQ_API_KEY'],
         )
         self.dataset =[
-            {
-            'Title':"Alternative Dispute Resolution (ADR) Certificate",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Alternative Dispute Resolution (ADR) Certificate.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Application Instructions - Alternate Dispute Resolution (ADR) Certificate",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Application Instructions - Alternate Dispute Resolution (ADR) Certificate.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Application Instructions - Master of Comparative Law (MCL)",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Application Instructions - Master of Comparative Law (MCL).txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Application Instructions - Master of Dispute Resolution (MDR)",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Application Instructions - Master of Dispute Resolution (MDR).txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Application Instructions - Master of International Trade Law and Economics (MITLE)",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Application Instructions - Master of International Trade Law and Economics (MITLE).txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Application Instructions Extended Master of Laws (LLM)",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Application Instructions Extended Master of Laws (LLM).txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Application Instructions LLM in ADR",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Application Instructions LLM in ADR.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Application Instructions LLM in International Business and Economic Law",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Application Instructions LLM in International Business and Economic Law.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Application Instructions LLM in Privacy Law and Cybersecurity",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Application Instructions LLM in Privacy Law and Cybersecurity.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Application Instructions Master of Comparative Law (MCL)",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Application Instructions Master of Comparative Law (MCL).txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Application Instructions Master of Laws (LLM) - Online",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Application Instructions Master of Laws (LLM) - Online.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Application Instructions Master of Laws (LLM) Degree",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Application Instructions Master of Laws (LLM) Degree.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Bar and Certificate Tracks Master of Laws (LLM) - Online",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Bar and Certificate Tracks Master of Laws (LLM) - Online.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Campus Housing - 1 yr Master of Laws (LLM) Degree",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Campus Housing - 1 yr Master of Laws (LLM) Degree.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Campus Housing - LLM in ADR",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Campus Housing - LLM in ADR.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Campus Housing - LLM in International Business and Economic Law",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Campus Housing - LLM in International Business and Economic Law.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Campus Housing - LLM in Privacy Law and Cybersecurity",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Campus Housing - LLM in Privacy Law and Cybersecurity.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Campus Housing - Master of Comparative Law (MCL)",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Campus Housing - Master of Comparative Law (MCL).txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Campus Housing - Master of Dispute Resolution (MDR)",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Campus Housing - Master of Dispute Resolution (MDR).txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Campus Housing - Master of International Trade Law and Economics (MITLE)",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Campus Housing - Master of International Trade Law and Economics (MITLE).txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Career and Bar - 1 yr Master of Laws (LLM) Degree",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Career and Bar - 1 yr Master of Laws (LLM) Degree.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Career and Bar - LLM in ADR",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Career and Bar - LLM in ADR.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Career and Bar - LLM in International Business and Economic Law",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Career and Bar - LLM in International Business and Economic Law.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Career and Bar - LLM in Privacy Law and Cybersecurity",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Career and Bar - LLM in Privacy Law and Cybersecurity.txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Career and Bar Master of Comparative Law (MCL)",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Career and Bar Master of Comparative Law (MCL).txt',
-            "tags" : ["ucla"]
-            },
-            {
-            'Title':"Career Opportunities - Master of Dispute Resolution (MDR)",
-            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'files/Career Opportunities - Master of Dispute Resolution (MDR).txt',
-            "tags" : ["ucla"]
-            },
+            
             {
             'Title':"Career Opportunities - Master of International Trade Law and Economics (MITLE)",
             'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
@@ -386,6 +231,162 @@ class RagClient:
             'filename' :'files/USC Gould - Master of Comparative Law (MCL).txt',
             "tags" : ["ucla"]
             },
+            {
+            'Title':"Alternative Dispute Resolution (ADR) Certificate",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Alternative Dispute Resolution (ADR) Certificate.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions - Alternate Dispute Resolution (ADR) Certificate",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions - Alternate Dispute Resolution (ADR) Certificate.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions - Master of Comparative Law (MCL)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions - Master of Comparative Law (MCL).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions - Master of Dispute Resolution (MDR)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions - Master of Dispute Resolution (MDR).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions - Master of International Trade Law and Economics (MITLE)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions - Master of International Trade Law and Economics (MITLE).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions Extended Master of Laws (LLM)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions Extended Master of Laws (LLM).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions LLM in ADR",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions LLM in ADR.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions LLM in International Business and Economic Law",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions LLM in International Business and Economic Law.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions LLM in Privacy Law and Cybersecurity",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions LLM in Privacy Law and Cybersecurity.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions Master of Comparative Law (MCL)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions Master of Comparative Law (MCL).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions Master of Laws (LLM) - Online",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions Master of Laws (LLM) - Online.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Application Instructions Master of Laws (LLM) Degree",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions Master of Laws (LLM) Degree.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Bar and Certificate Tracks Master of Laws (LLM) - Online",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Bar and Certificate Tracks Master of Laws (LLM) - Online.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Campus Housing - 1 yr Master of Laws (LLM) Degree",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Campus Housing - 1 yr Master of Laws (LLM) Degree.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Campus Housing - LLM in ADR",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Campus Housing - LLM in ADR.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Campus Housing - LLM in International Business and Economic Law",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Campus Housing - LLM in International Business and Economic Law.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Campus Housing - LLM in Privacy Law and Cybersecurity",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Campus Housing - LLM in Privacy Law and Cybersecurity.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Campus Housing - Master of Comparative Law (MCL)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Campus Housing - Master of Comparative Law (MCL).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Campus Housing - Master of Dispute Resolution (MDR)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Campus Housing - Master of Dispute Resolution (MDR).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Campus Housing - Master of International Trade Law and Economics (MITLE)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Campus Housing - Master of International Trade Law and Economics (MITLE).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Career and Bar - 1 yr Master of Laws (LLM) Degree",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Career and Bar - 1 yr Master of Laws (LLM) Degree.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Career and Bar - LLM in ADR",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Career and Bar - LLM in ADR.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Career and Bar - LLM in International Business and Economic Law",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Career and Bar - LLM in International Business and Economic Law.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Career and Bar - LLM in Privacy Law and Cybersecurity",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Career and Bar - LLM in Privacy Law and Cybersecurity.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Career and Bar Master of Comparative Law (MCL)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Career and Bar Master of Comparative Law (MCL).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Career Opportunities - Master of Dispute Resolution (MDR)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Career Opportunities - Master of Dispute Resolution (MDR).txt',
+            "tags" : ["ucla"]
+            },
         ]
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
         self.model = SentenceTransformer(self.model_name)
@@ -447,7 +448,7 @@ class RagClient:
             
         query_embedding = self.model.encode(text)
         query_embedding = np.array([query_embedding]).astype('float32')
-        k = 6
+        k = 10
         D, I = self.faiss_index.search(query_embedding, k)
         retrieved_list = [self.chunks[i] for i in I[0]]
         retrieved_object_list = []

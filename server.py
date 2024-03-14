@@ -137,8 +137,12 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
 
 @app.post("/test/rag")
 async def request_body(text):
-    objectList, answer = rag_client.answer(text)
-    return {"question asked": text, "answer": answer, "response objects": objectList}
+    try: 
+        objectList, answer = rag_client.answer(text)
+        return {"question asked": text, "answer": answer}
+    except Exception as e:
+        # Log the error for debugging purposes
+        print("Error test call:", e)
 
 # @app.post("/register-call-on-your-server")
 # async def register_call(request_body: RegisterCallRequestBody):
