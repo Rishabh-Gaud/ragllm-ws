@@ -212,6 +212,66 @@ class RagClient:
             'filename' :'files/Curriculum - Alternative Dispute Resolution Certificate.txt',
             "tags" : ["ucla"]
             },
+            {
+            'Title':"Curriculum - LLM in ADR",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Curriculum - LLM in ADR.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Curriculum - LLM in International Business and Economic Law",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Curriculum - LLM in International Business and Economic Law.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Curriculum - LLM in Privacy Law and Cybersecurity",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Curriculum - LLM in Privacy Law and Cybersecurity.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Curriculum - Master of Comparative Law (MCL)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Curriculum - Master of Comparative Law (MCL).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Curriculum - Master of International Trade Law and Economics (MITLE)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Curriculum - Master of International Trade Law and Economics (MITLE).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Curriculum - Master of Laws (LLM) - Online",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Curriculum - Master of Laws (LLM) - Online.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Curriculum Master of Dispute Resolution (MDR)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Curriculum Master of Dispute Resolution (MDR).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"LLM - 1 year",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/LLM - 1 year.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"LLM in International Business and Economic Law",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/LLM in International Business and Economic Law.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Master of Comparative Law (MCL) Degree",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Master of Comparative Law (MCL) Degree.txt',
+            "tags" : ["ucla"]
+            },
         ]
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
         self.model = SentenceTransformer(self.model_name)
