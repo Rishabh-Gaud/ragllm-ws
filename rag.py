@@ -350,6 +350,42 @@ class RagClient:
             'filename' :'files/Tuition and Financial Aid Master of Laws (LLM) - Online.txt',
             "tags" : ["ucla"]
             },
+            {
+            'Title':"Two-Year Extended Master of Laws (LLM)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Two-Year Extended Master of Laws (LLM).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Types of Aid - LLM in Privacy Law and Cybersecurity",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Types of Aid - LLM in Privacy Law and Cybersecurity.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"USC Gould -  Master of Dispute Resolution (MDR)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/USC Gould -  Master of Dispute Resolution (MDR).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"USC Gould - Centre for Dispute Resolution_",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/USC Gould - Centre for Dispute Resolution_.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"USC Gould - Housing Flyer",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/USC Gould - Housing Flyer.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"USC Gould - Master of Comparative Law (MCL)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/USC Gould - Master of Comparative Law (MCL).txt',
+            "tags" : ["ucla"]
+            },
         ]
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
         self.model = SentenceTransformer(self.model_name)
