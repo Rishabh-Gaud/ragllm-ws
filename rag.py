@@ -272,6 +272,84 @@ class RagClient:
             'filename' :'files/Master of Comparative Law (MCL) Degree.txt',
             "tags" : ["ucla"]
             },
+            {
+            'Title':"Master of International Trade Law and Economics (MITLE)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Master of International Trade Law and Economics (MITLE).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Master of Laws (LLM) - Online",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Master of Laws (LLM) - Online.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Master of Laws (LLM) in Privacy Law and Cybersecurity",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Master of Laws (LLM) in Privacy Law and Cybersecurity.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Master of Laws in Alternative Dispute Resolution (LLM in ADR)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Master of Laws in Alternative Dispute Resolution (LLM in ADR).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Master of Science in Innovation Economics, Law and Regulation (MIELR)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Master of Science in Innovation Economics, Law and Regulation (MIELR).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Tuition & Financial Aid - 1 yr Master of Laws (LLM) Degree",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Tuition & Financial Aid - 1 yr Master of Laws (LLM) Degree.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Tuition & Financial Aid - Alternative Dispute Resolution Certificate",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Tuition & Financial Aid - Alternative Dispute Resolution Certificate.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Tuition & Financial Aid - LLM in ADR",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Tuition & Financial Aid - LLM in ADR.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Tuition & Financial Aid - Master of Comparative Law (MCL)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Tuition & Financial Aid - Master of Comparative Law (MCL).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Tuition & Financial Aid - Master of Dispute Resolution (MDR)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Tuition & Financial Aid - Master of Dispute Resolution (MDR).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Tuition & Financial Aid LLM in International Business and Economic Law",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Tuition & Financial Aid LLM in International Business and Economic Law.txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Tuition and Financial Aid - Master of International Trade Law and Economics (MITLE)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Tuition and Financial Aid - Master of International Trade Law and Economics (MITLE).txt',
+            "tags" : ["ucla"]
+            },
+            {
+            'Title':"Tuition and Financial Aid Master of Laws (LLM) - Online",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Tuition and Financial Aid Master of Laws (LLM) - Online.txt',
+            "tags" : ["ucla"]
+            },
         ]
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
         self.model = SentenceTransformer(self.model_name)
@@ -293,7 +371,7 @@ class RagClient:
         else:
             texts = []
             for data in self.dataset:
-                splitter = CharacterTextSplitter(chunk_size=330, chunk_overlap=10)
+                splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=10)
                 with open(data['filename'], encoding="utf8") as f:
                     self.fulltext = f.read()
                 f.close()
