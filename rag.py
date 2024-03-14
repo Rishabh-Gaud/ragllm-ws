@@ -32,33 +32,33 @@ from langchain.retrievers.self_query.base import SelfQueryRetriever
 from langchain.chains.query_constructor.base import AttributeInfo
 
 agentPrompt = "Task: As a representative of the USC Gould LL.M. Admissions Office your task is to assist students with their queries about the program."
-from keybert import KeyBERT
+# from keybert import KeyBERT
 
-from keybert import KeyBERT
-kw_model = KeyBERT()
+# from keybert import KeyBERT
+# kw_model = KeyBERT()
 
-logfile = 'KeyBERT-Log.txt'
+# logfile = 'KeyBERT-Log.txt'
 
 
-def writehistory(text):
-    with open(logfile, 'a', encoding='utf-8') as f:
-        f.write(text)
-        f.write('\n')
-    f.close()
+# def writehistory(text):
+#     with open(logfile, 'a', encoding='utf-8') as f:
+#         f.write(text)
+#         f.write('\n')
+#     f.close()
 
-def extract_keys(text, ngram,dvsity):
-    import datetime
-    import random
-    a = kw_model.extract_keywords(text, keyphrase_ngram_range=(1, ngram), stop_words='english',
-                              use_mmr=True, diversity=dvsity, highlight=True)     #highlight=True
-    tags = []
-    for kw in a:
-        tags.append(str(kw[0]))
-    timestamped = datetime.datetime.now()
-    #LOG THE TEXT AND THE METATAGS
-    logging_text = f"LOGGED ON: {str(timestamped)}\nMETADATA: {str(tags)}\nsettings: keyphrase_ngram_range (1,{str(ngram)})  Diversity {str(dvsity)}\n---\nORIGINAL TEXT:\n{text}\n---\n\n"
-    # writehistory(logging_text)
-    return tags
+# def extract_keys(text, ngram,dvsity):
+#     import datetime
+#     import random
+#     a = kw_model.extract_keywords(text, keyphrase_ngram_range=(1, ngram), stop_words='english',
+#                               use_mmr=True, diversity=dvsity, highlight=True)     #highlight=True
+#     tags = []
+#     for kw in a:
+#         tags.append(str(kw[0]))
+#     timestamped = datetime.datetime.now()
+#     #LOG THE TEXT AND THE METATAGS
+#     logging_text = f"LOGGED ON: {str(timestamped)}\nMETADATA: {str(tags)}\nsettings: keyphrase_ngram_range (1,{str(ngram)})  Diversity {str(dvsity)}\n---\nORIGINAL TEXT:\n{text}\n---\n\n"
+#     # writehistory(logging_text)
+#     return tags
 
 class RagClient:
     def __init__(self):
@@ -158,7 +158,7 @@ class RagClient:
                 self.chunks_with_metadata =[]
                 processed_chunks = set()
                 for chunk in self.chunks: 
-                    tags = extract_keys(chunk, 1, 0.32)
+                    tags = ["usc", "delhi","ucla"]
                     # Format the chunk text and its metadata before encoding
                     chunk_with_metadata = f"METADATA: {tags} \n chunk: {chunk} \n "
                     # Check if the chunk has already been processed
