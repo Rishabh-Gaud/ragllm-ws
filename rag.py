@@ -166,9 +166,9 @@ class RagClient:
                         self.chunk_embeddings.append(self.model.encode(chunk_with_metadata))
                         self.chunks_with_metadata.append(chunk_with_metadata)
                         processed_chunks.add(chunk_with_metadata)  # Add the processed chunk to the set
-                print("chunks_embeddings: ", self.chunk_embeddings)
-            # with open("chunks_embeddings.pkl", "wb") as f:
-            #     pickle.dump((self.chunks_with_metadata, self.chunk_embeddings), f)
+                # print("chunks_embeddings: ", self.chunk_embeddings)
+            with open("chunks_embeddings.pkl", "wb") as f:
+                pickle.dump((self.chunks_with_metadata, self.chunk_embeddings), f)
 
         dimension = self.chunk_embeddings[0].shape[0]
         self.faiss_index = faiss.IndexFlatL2(dimension)
