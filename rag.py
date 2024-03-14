@@ -90,46 +90,54 @@ class RagClient:
         #     # 'https://gould.usc.edu/academics/degrees/llm-in-plcs/'
         # ]
         self.dataset =[
-            # {
-            # 'Title':"Alternative Dispute Resolution (ADR) Certificate",
-            # 'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            # 'filename' :'Alternative Dispute Resolution (ADR) Certificate.txt'
-            # },
-            # {
-            # 'Title':"Application Instructions - Alternate Dispute Resolution (ADR) Certificate",
-            # 'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            # 'filename' :'Application Instructions - Alternate Dispute Resolution (ADR) Certificate.txt'
-            # },
+            {
+            'Title':"Alternative Dispute Resolution (ADR) Certificate",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Alternative Dispute Resolution (ADR) Certificate.txt',
+            "tags" : ["usc", "delhi","ucla"]
+            },
+            {
+            'Title':"Application Instructions - Alternate Dispute Resolution (ADR) Certificate",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions - Alternate Dispute Resolution (ADR) Certificate.txt',
+            "tags" : ["usc", "delhi","ucla"]
+            },
             {
             'Title':"Application Instructions - Master of Comparative Law (MCL)",
             'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            'filename' :'Application Instructions - Master of Comparative Law (MCL).txt'
+            'filename' :'files/Application Instructions - Master of Comparative Law (MCL).txt',
+            "tags" : ["usc", "delhi","ucla"]
             },
-            # {
-            # 'Title':"Application Instructions - Master of Dispute Resolution (MDR)",
-            # 'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            # 'filename' :'Application Instructions - Master of Dispute Resolution (MDR).txt'
-            # },
-            # {
-            # 'Title':"Application Instructions - Master of International Trade Law and Economics (MITLE)",
-            # 'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            # 'filename' :'Application Instructions - Master of International Trade Law and Economics (MITLE).txt'
-            # },
-            # {
-            # 'Title':"Application Instructions Extended Master of Laws (LLM)",
-            # 'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            # 'filename' :'Application Instructions Extended Master of Laws (LLM).txt'
-            # },
-            # {
-            # 'Title':"Application Instructions LLM in ADR",
-            # 'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            # 'filename' :'Application Instructions LLM in ADR.txt'
-            # },
-            # {
-            # 'Title':"Application Instructions LLM in International Business and Economic Law",
-            # 'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
-            # 'filename' :'Application Instructions LLM in International Business and Economic Law.txt'
-            # },
+            {
+            'Title':"Application Instructions - Master of Dispute Resolution (MDR)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions - Master of Dispute Resolution (MDR).txt',
+            "tags" : ["usc", "delhi","ucla"]
+            },
+            {
+            'Title':"Application Instructions - Master of International Trade Law and Economics (MITLE)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions - Master of International Trade Law and Economics (MITLE).txt',
+            "tags" : ["usc", "delhi","ucla"]
+            },
+            {
+            'Title':"Application Instructions Extended Master of Laws (LLM)",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions Extended Master of Laws (LLM).txt',
+            "tags" : ["usc", "delhi","ucla"]
+            },
+            {
+            'Title':"Application Instructions LLM in ADR",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions LLM in ADR.txt',
+            "tags" : ["usc", "delhi","ucla"]
+            },
+            {
+            'Title':"Application Instructions LLM in International Business and Economic Law",
+            'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
+            'filename' :'files/Application Instructions LLM in International Business and Economic Law.txt',
+            "tags" : ["usc", "delhi","ucla"]
+            },
         ]
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
         self.model = SentenceTransformer(self.model_name)
@@ -159,9 +167,9 @@ class RagClient:
                 self.chunk_embeddings = []
                 processed_chunks = set()
                 for chunk in self.chunks: 
-                    tags = ["usc", "delhi","ucla"]
                     # Format the chunk text and its metadata before encoding
-                    chunk_with_metadata = f"METADATA: {tags} \n chunk: {chunk} \n "
+                    chunk_with_metadata = f"METADATA: {data} \n chunk: {chunk} \n "
+                    print(chunk_with_metadata)
                     # Check if the chunk has already been processed
                     if chunk_with_metadata not in processed_chunks:
                         self.chunk_embeddings.append(self.model.encode(chunk_with_metadata))
@@ -197,7 +205,7 @@ class RagClient:
         retrieved_object_list = []
         for i in I[0]: 
             # Regular expression pattern to extract the MetaData array
-            pattern = r"METADATA:\s+\[([^\]]+)\]"
+            pattern = r"METADATA:\s+({.*?})"
 
             # Using regular expression to find the MetaData array
             metadata_match = re.search(pattern, self.chunks[i])
@@ -205,7 +213,9 @@ class RagClient:
             if metadata_match:
                 metadata_array = metadata_match.group(1)
                 metadata_list = re.findall(r"'(.*?)'", metadata_array)
-                self.metaData = metadata_list
+                metadata_dict_string = metadata_match.group(1)
+                metadata_dict = eval(metadata_dict_string)  # Using eval to convert string to dictionary
+                self.metaData = metadata_dict
                 retrieved_object_list.append({
                     "content": self.chunks[i],
                     "metaData": self.metaData
