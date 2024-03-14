@@ -64,6 +64,8 @@ class RagClient:
     def __init__(self):
         
         self.load_dotenv()
+        
+        self.chunks_with_metadata =[]
         self.client = Groq(
             # organization=os.environ['OPENAI_ORGANIZATION_ID'],
             api_key=os.environ['GROQ_API_KEY'],
@@ -155,7 +157,6 @@ class RagClient:
                 f.close()
                 self.chunks = splitter.split_text(self.fulltext)
                 self.chunk_embeddings = []
-                self.chunks_with_metadata =[]
                 processed_chunks = set()
                 for chunk in self.chunks: 
                     tags = ["usc", "delhi","ucla"]
@@ -199,14 +200,14 @@ class RagClient:
             pattern = r"METADATA:\s+\[([^\]]+)\]"
 
             # Using regular expression to find the MetaData array
-            metadata_match = re.search(pattern, self.chunks_with_metadata[i])
+            metadata_match = re.search(pattern, self.chunks[i])
 
             if metadata_match:
                 metadata_array = metadata_match.group(1)
                 metadata_list = re.findall(r"'(.*?)'", metadata_array)
                 self.metaData = metadata_list
                 retrieved_object_list.append({
-                    "content": self.chunks_with_metadata[i],
+                    "content": self.chunks[i],
                     "metaData": self.metaData
                 })
             else:
