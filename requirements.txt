@@ -36,3 +36,8 @@ faiss-cpu  # or faiss-gpu if you're using GPU
 numpy
 langchain
 groq
+tiktoken
+chromadb 
+lark
+google-search-results
+huggingface_hub
