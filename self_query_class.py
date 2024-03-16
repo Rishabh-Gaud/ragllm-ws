@@ -63,10 +63,4 @@ class DocumentRetriever:
             verbose=True,
         )
         return retriever.get_relevant_documents(query, k=limit)
-
-# Usage:
-document_retriever = DocumentRetriever()
-start_time = time.time()
-data = document_retriever.retrieve_documents("help me to prepare for business analyst")
-end_time = time.time()
-print("time: ", end_time - start_time)
+        

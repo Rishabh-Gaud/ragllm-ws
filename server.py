@@ -14,7 +14,7 @@ import retellclient
 from retellclient.models import operations, components
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-
+from self_query_class import  DocumentRetriever
 load_dotenv()
 
 
@@ -32,6 +32,8 @@ app.add_middleware(
 
 llm_client = LlmClient()
 rag_client = RagClient()
+
+document_retriever = DocumentRetriever()
 retell = retellclient.RetellClient(
     api_key=os.environ['RETELL_API_KEY']
 )
@@ -138,8 +140,12 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
 @app.post("/test/rag")
 async def request_body(text):
     try: 
-        objectList, answer = rag_client.answer(text)
-        return {"question asked": text, "answer": answer}
+        # objectList, answer = rag_client.answer(text)
+        start_time = time.time()
+        data = document_retriever.retrieve_documents(text)
+        end_time = time.time()
+        print("time: ", end_time - start_time)
+        return {"question asked": text, "time taken": end_time - start_time, "chunks": data}
     except Exception as e:
         # Log the error for debugging purposes
         print("Error test call:", e)
