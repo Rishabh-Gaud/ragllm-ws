@@ -7,7 +7,7 @@ from langchain.retrievers.self_query.base import SelfQueryRetriever
 from langchain.chains.query_constructor.base import AttributeInfo
 from dotenv import load_dotenv
 
-# os.environ["OPENAI_API_KEY"] = "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"
+# os.environ["OPENAI_API_KEY"] = ""
 
 # Initialize OpenAI embeddings
 load_dotenv()
