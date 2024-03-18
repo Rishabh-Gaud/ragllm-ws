@@ -34,6 +34,6 @@ sentence-transformers==2.5.1
 faiss-cpu==1.8.0 # or faiss-gpu if you're using GPU
 numpy==1.26.4
 langchain==0.1.12
-fitz==0.0.1.dev2
 PyMuPDF==1.16.14
+fitz==0.0.1.dev2
 langchain-text-splitters==0.0.1
