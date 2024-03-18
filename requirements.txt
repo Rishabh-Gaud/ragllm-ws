@@ -39,3 +39,6 @@ google-search-results
 tiktoken 
 chromadb 
 lark
+fitz
+PyMuPDF
+langchain-text-splitters
