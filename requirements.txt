@@ -28,17 +28,11 @@ twilio==8.12.0
 retell-sdk==2.0.1
 fastapi==0.100.1
 uvicorn==0.21.1
-streamlit
-beautifulsoup4
+beautifulsoup4==4.12.3
 requests
-sentence-transformers
-faiss-cpu  # or faiss-gpu if you're using GPU
-numpy
-langchain
-google-search-results
-tiktoken 
-chromadb 
-lark
-fitz
-PyMuPDF
-langchain-text-splitters
+sentence-transformers==2.5.1
+faiss-cpu==1.8.0 # or faiss-gpu if you're using GPU
+numpy==1.26.4
+langchain==0.1.12
+PyMuPDF==1.23.26
+langchain-text-splitters==0.0.1
