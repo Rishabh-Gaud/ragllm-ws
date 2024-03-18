@@ -36,3 +36,4 @@ numpy==1.26.4
 langchain==0.1.12
 PyMuPDF==1.16.14
 langchain-text-splitters==0.0.1
+fitz==0.0.1.dev2
