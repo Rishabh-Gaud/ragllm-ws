@@ -116,7 +116,7 @@ async def request_body(text, program):
     try: 
         start_time = time.time()
         # objectList, answer = rag_client.answer(text)
-        rag_data =await pineconeClient.query_index_async(text, filter_filename=program)
+        rag_data =await pineconeClient.query_index(text, filter_filename=program)
         end_time = time.time()
         prompt = [{
             "role": "system",
