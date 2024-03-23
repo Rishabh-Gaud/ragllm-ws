@@ -90,7 +90,7 @@ class PineconeDocumentProcessor:
         modified_data = ''.join(results)
         print(end_time - start_time)
         return modified_data
-`
+
     def query_index1(self, query, top_k=10, program=None):
         user_content = ""
         for item in query:
