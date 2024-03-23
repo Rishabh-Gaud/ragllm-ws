@@ -1,3 +1,4 @@
+import asyncio
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -5,11 +6,13 @@ from sentence_transformers import SentenceTransformer
 from pinecone import Pinecone
 import json
 import os
+import time
 from dotenv import load_dotenv
 class PineconeDocumentProcessor:
     def __init__(self):
         
         load_dotenv()
+        
         # Initialize SentenceTransformer model
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
         self.model = SentenceTransformer(self.model_name)
@@ -22,7 +25,7 @@ class PineconeDocumentProcessor:
         self.index = self.pc.Index(self.index_name)
         
         # Initialize OpenAIEmbeddings
-        self.embeddings = OpenAIEmbeddings()
+        # self.embeddings = OpenAIEmbeddings()
         
     def process_documents(self, dataset):
         for file in dataset:
@@ -50,21 +53,44 @@ class PineconeDocumentProcessor:
                 ])
                 print("done...")
                 
-    def query_index(self, query, top_k=10, filter_filename=None):
-        query_vector = processor.model.encode(query).tolist()
-        result = self.index.query(
-            vector=query_vector,
-            top_k=top_k,
-            # include_values=True,
-            include_metadata=True,
-            filter={"program": {"$eq": filter_filename}} if filter_filename else None
-        )
-        # print(result)
-        modifiedData = ""
-        for doc in  result.matches:
-            modifiedData  += json.dumps(doc.metadata)
-        return modifiedData
-    
+    # def query_index(self, query, top_k=5, filter_filename=None):
+    #     query_vector = self.model.encode(query).tolist()
+    #     start= time.time()
+    #     result = self.index.query(
+    #         vector=query_vector,
+    #         top_k=top_k,
+    #         # include_values=True,
+    #         include_metadata=True,
+    #         filter={"program": {"$eq": filter_filename}} if filter_filename else None
+    #     )
+    #     end = time.time()
+    #     # print(result)
+    #     modifiedData = ""
+    #     for doc in  result.matches:
+    #         modifiedData  += json.dumps(doc.metadata)
+    #     print(end-start)
+    #     return modifiedData
+
+    async def query_index_async(self, queries, top_k=5, filter_filename=None):
+        async def query_single(query):
+            query_vector = self.model.encode(query).tolist()
+            result = self.index.query(
+                vector=query_vector,
+                top_k=top_k,
+                include_metadata=True,
+                filter={"program": {"$eq": filter_filename}} if filter_filename else None
+            )
+            return [json.dumps(doc.metadata) for doc in result.matches]
+
+        start_time = time.time()
+        tasks = [query_single(query) for query in queries]
+        results = await asyncio.gather(*tasks)
+        end_time = time.time()
+
+        modified_data = ''.join(results)
+        print(end_time - start_time)
+        return modified_data
+`
     def query_index1(self, query, top_k=10, program=None):
         user_content = ""
         for item in query:
@@ -87,7 +113,7 @@ class PineconeDocumentProcessor:
             modifiedData  += json.dumps(doc.metadata)
         return modifiedData
 # Instantiate the PineconeDocumentProcessor class
-processor = PineconeDocumentProcessor()
+# processor1 = PineconeDocumentProcessor()
 
 # dataset =[        
 #             {
