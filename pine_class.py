@@ -5,9 +5,11 @@ from sentence_transformers import SentenceTransformer
 from pinecone import Pinecone
 import json
 import os
-
+from dotenv import load_dotenv
 class PineconeDocumentProcessor:
     def __init__(self):
+        
+        load_dotenv()
         # Initialize SentenceTransformer model
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
         self.model = SentenceTransformer(self.model_name)
