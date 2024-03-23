@@ -6,7 +6,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.websockets import WebSocketState
 from llm import LlmClient
-from rag import RagClient
+# from rag import RagClient
+from pine_class import PineconeDocumentProcessor
 from groq import Groq
 import time
 import asyncio
@@ -15,7 +16,8 @@ from retellclient.models import operations, components
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 # from self_query_class import  DocumentRetriever
-from new_rag_class import PdfRagQueryProcessor
+# from new_rag_class import PdfRagQueryProcessor
+
 load_dotenv()
 
 
@@ -32,10 +34,11 @@ app.add_middleware(
 )
 
 llm_client = LlmClient()
-rag_client = RagClient()
+# rag_client = RagClient()
 
 # document_retriever = DocumentRetriever()
-pdf_rag_query_processor = PdfRagQueryProcessor()
+# pdf_rag_query_processor = PdfRagQueryProcessor()
+pineconeClient = PineconeDocumentProcessor()
 retell = retellclient.RetellClient(
     api_key=os.environ['RETELL_API_KEY']
 )
@@ -104,76 +107,18 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
         print(f"LLM WebSocket connection closed for {call_id}")
 
 
-# html = """
-# <!DOCTYPE html>
-# <html>
-#     <head>
-#         <title>Chat</title>
-#     </head>
-#     <body>
-#         <h1>WebSocket Chat</h1>
-#         <form action="" onsubmit="sendMessage(event)">
-#             <input type="text" id="messageText" autocomplete="off"/>
-#             <button>Send</button>
-#         </form>
-#         <ul id='messages'>
-#         </ul>
-#         <script>
-#             var ws = new WebSocket("wss://rag.collegeit.in/ws");
-#             ws.onmessage = function(event) {
-#                 var messages = document.getElementById('messages')
-#                 var message = document.createElement('li')
-#                 var content = document.createTextNode(event.data)
-#                 message.appendChild(content)
-#                 messages.appendChild(message)
-#             };
-#             function sendMessage(event) {
-#                 var input = document.getElementById("messageText")
-#                 ws.send(input.value)
-#                 input.value = ''
-#                 event.preventDefault()
-#             }
-#         </script>
-#     </body>
-# </html>
-# """
-
-
 @app.post("/test/rag")
 async def request_body(text):
     try: 
-        answer= pdf_rag_query_processor.answer(text)
+        start_time = time.time()
+        # objectList, answer = rag_client.answer(text)
+        rag_data = pineconeClient.query_index(text)
         # answer, ragtime, llmtime = pdf_rag_query_processor.answer(text)
-        # return {"question asked": text, "answer": answer, "rag time taken": ragtime,  "llm time taken": llmtime}
-        return answer
+        # data = document_retriever.retrieve_documents(text)
+        end_time = time.time()
+        print(end_time - start_time)
+        return {"rag data": rag_data, "rag time taken": end_time - start_time}
     except Exception as e:
         # Log the error for debugging purposes
         print("Error test call:", e)
-
-# @app.post("/register-call-on-your-server")
-# async def register_call(request_body: RegisterCallRequestBody):
-#     try:
-#         # Assuming 'retellClient' is an instance of the RetellClient class
-#         print(request_body.agent_id)
-#         register_call_response = retell.register_call(operations.RegisterCallRequestBody(
-#             agent_id=request_body.agent_id,
-#             audio_websocket_protocol='web',
-#             audio_encoding='s16le',
-#             sample_rate=24000
-#         ))
-#         response =  register_call_response.raw_response.json()
-#         return response
-#     except Exception as e:
-#         # Log the error for debugging purposes
-#         print("Error registering call:", e)
-#         # Raise HTTPException with 500 status code and error message
-#         raise HTTPException(status_code=500, detail="Failed to register call")
-
-
-# @app.websocket("/ws")
-# async def websocket_endpoint(websocket: WebSocket):
-#     await websocket.accept()
-#     while True:
-#         data = await websocket.receive_text()
-#         await websocket.send_text(f"Message text was: {data}")
 

@@ -1,6 +1,6 @@
 from openai import AzureOpenAI
 import os
-from rag import RagClient
+# from rag import RagClient
 beginSentence = "Hi, this is the USC Gould School of Law LL.M. Admissions Office, how may I assist you today?"
 agentPrompt = "Task: As a representative of the USC Gould LL.M. Admissions Office your task is to assist students with their queries about the program."
 
@@ -12,7 +12,7 @@ class LlmClient:
             api_key=os.environ['AZURE_OPENAI_KEY'],
             api_version="2023-05-15"
         )
-        self.rag_client = RagClient()
+        # self.rag_client = RagClient()
     def draft_begin_messsage(self):
         return {
             "response_id": 0,
