@@ -62,12 +62,33 @@ class PineconeDocumentProcessor:
         for doc in  result.matches:
             modifiedData  += json.dumps(doc.metadata)
         return modifiedData
-
+    
+    def query_index1(self, query, top_k=10, filter_filename=None):
+        user_content = ""
+        for item in query:
+        # Check if the role is 'user' and content is not empty
+            if item["role"] == "user" and item["content"].strip() != "":
+                # Concatenate the user's content
+                user_content += item["content"] + " "
+           
+        query_vector = processor.model.encode(user_content).tolist()
+        result = self.index.query(
+            vector=query_vector,
+            top_k=top_k,
+            # include_values=True,
+            include_metadata=True,
+            filter={"Title": {"$eq": filter_filename}} if filter_filename else None
+        )
+        # print(result)
+        modifiedData = ""
+        for doc in  result.matches:
+            modifiedData  += json.dumps(doc.metadata)
+        return modifiedData
 # Instantiate the PineconeDocumentProcessor class
 processor = PineconeDocumentProcessor()
 
 # dataset =[
-            
+          
 #             {
 #             'Title':"Career Opportunities - Master of International Trade Law and Economics (MITLE)",
 #             'URL': "https://gould.usc.edu/academics/degrees/online-llm/application/",
