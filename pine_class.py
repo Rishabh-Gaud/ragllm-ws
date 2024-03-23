@@ -62,7 +62,7 @@ class PineconeDocumentProcessor:
         return modifiedData
 
 # Instantiate the PineconeDocumentProcessor class
-# processor = PineconeDocumentProcessor()
+processor = PineconeDocumentProcessor()
 
 # dataset =[
             
