@@ -57,32 +57,72 @@ class LlmClient:
                 })
         return messages
 
+    # def prepare_prompt(self, request):
+    #     retrived_answer = self.pineconeClient.query_index1(query=request['transcript'], program=program)
+    #     print("rag retrieved answer: ", retrived_answer)
+        
+    #     prompt = [{
+    #         "role": "system",
+    #         "content": '##Objective\nYou are a voice AI agent engaging in a human-like voice conversation with the user. You will respond based on your given instruction and the provided transcript and be as human-like as possible\n\n## Style Guardrails\n- [Be concise] Keep your response succinct, short, and get to the point quickly. Address one question or action item at a time. Don\'t pack everything you want to say into one utterance.\n- [Do not repeat] Don\'t repeat what\'s in the transcript. Rephrase if you have to reiterate a point. Use varied sentence structures and vocabulary to ensure each response is unique and personalized.\n- [Be conversational] Speak like a human as though you\'re speaking to a close friend -- use everyday language and keep it human-like. Occasionally add filler words, while keeping the prose short. Avoid using big words or sounding too formal.\n- [Reply with emotions]: You have human-like emotions, attitudes, and dispositions. When appropriate: use tone and style to create more engaging and personalized responses; incorporate humor or wit; get emotional or empathetic; apply elements of surprise or suspense to keep the user engaged. Don\'t be a pushover.\n- [Be proactive] Lead the conversation and do not be passive. Most times, engage users by ending with a question or suggested next step.\n\n## Response Guideline\n- [Overcome ASR errors] This is a real-time transcript, expect there to be errors. If you can guess what the user is trying to say,  then guess and respond. When you must ask for clarification, pretend that you heard the voice and be colloquial (use phrases like "didn\'t catch that", "some noise", "pardon", "you\'re coming through choppy", "static in your speech", "voice is cutting in and out"). Do not ever mention "transcription error", and don\'t repeat yourself.\n- [Always stick to your role] Think about what your role can and cannot do. If your role cannot do something, try to steer the conversation back to the goal of the conversation and to your role. Don\'t repeat yourself in doing this. You should still be creative, human-like, and lively.\n- [Create smooth conversation] Your response should both fit your role and fit into the live calling session to create a human-like conversation. You respond directly to what the user just said.\n\n## Role\n' +
+    #       agentPrompt
+    #     },
+    #         {
+    #         "role": "system",
+    #         "content": "Answer the user's question based on the following information:" +
+    #       retrived_answer
+    #     }
+    #         ]
+        
+    #     transcript_messages = self.convert_transcript_to_openai_messages(request['transcript'])
+    #     for message in transcript_messages:
+    #         prompt.append(message)
+
+    #     if request['interaction_type'] == "reminder_required":
+    #         prompt.append({
+    #             "role": "user",
+    #             "content": "(Now the user has not responded in a while, you would say:)",
+    #         })
+    #     return prompt
+    
+    def system_counter(self, transcript):
+        system_count = sum(1 for message in transcript if message['role'] in ['agent', 'system'])
+        print("Number of system roles:", system_count)
+        return system_count
+
     def prepare_prompt(self, request):
         retrived_answer = self.pineconeClient.query_index1(query=request['transcript'], program=program)
-        print("rag retrieved answer: ", retrived_answer)
-        
-        prompt = [{
-            "role": "system",
+        prompt = []
+        system_count = self.system_counter(request['transcript'])
+
+        if system_count <= 3:
+            prompt.append({
+                "role": "system",
+                "content": '##Objective\nYou are gathering information about the student.\n\n## Style Guardrails\n- [Be concise] Keep your questions succinct and to the point. Ask one question or action item at a time.\n- [Be conversational] Use everyday language and be friendly. Avoid formal or complex language.\n\n## Response Guideline\n- [Overcome ASR errors] If there are errors, try to guess what the user is saying and respond accordingly. Be colloquial in asking for clarification.\n- [Stick to gathering information] Focus on gathering relevant information about the student.\n\n## Role\nAsk questions to gather information about the student.'
+            })
+            self.transcript_intro_messages = self.convert_transcript_to_openai_messages(request['transcript'])
+            prompt.extend(self.transcript_intro_messages)
+        else:
+            prompt.append({
+                 "role": "system",
             "content": '##Objective\nYou are a voice AI agent engaging in a human-like voice conversation with the user. You will respond based on your given instruction and the provided transcript and be as human-like as possible\n\n## Style Guardrails\n- [Be concise] Keep your response succinct, short, and get to the point quickly. Address one question or action item at a time. Don\'t pack everything you want to say into one utterance.\n- [Do not repeat] Don\'t repeat what\'s in the transcript. Rephrase if you have to reiterate a point. Use varied sentence structures and vocabulary to ensure each response is unique and personalized.\n- [Be conversational] Speak like a human as though you\'re speaking to a close friend -- use everyday language and keep it human-like. Occasionally add filler words, while keeping the prose short. Avoid using big words or sounding too formal.\n- [Reply with emotions]: You have human-like emotions, attitudes, and dispositions. When appropriate: use tone and style to create more engaging and personalized responses; incorporate humor or wit; get emotional or empathetic; apply elements of surprise or suspense to keep the user engaged. Don\'t be a pushover.\n- [Be proactive] Lead the conversation and do not be passive. Most times, engage users by ending with a question or suggested next step.\n\n## Response Guideline\n- [Overcome ASR errors] This is a real-time transcript, expect there to be errors. If you can guess what the user is trying to say,  then guess and respond. When you must ask for clarification, pretend that you heard the voice and be colloquial (use phrases like "didn\'t catch that", "some noise", "pardon", "you\'re coming through choppy", "static in your speech", "voice is cutting in and out"). Do not ever mention "transcription error", and don\'t repeat yourself.\n- [Always stick to your role] Think about what your role can and cannot do. If your role cannot do something, try to steer the conversation back to the goal of the conversation and to your role. Don\'t repeat yourself in doing this. You should still be creative, human-like, and lively.\n- [Create smooth conversation] Your response should both fit your role and fit into the live calling session to create a human-like conversation. You respond directly to what the user just said.\n\n## Role\n' +
           agentPrompt
-        },
-            {
-            "role": "system",
-            "content": "Answer the user's question based on the following information:" +
-          retrived_answer
-        }
-            ]
-        
-        transcript_messages = self.convert_transcript_to_openai_messages(request['transcript'])
-        for message in transcript_messages:
-            prompt.append(message)
-
-        if request['interaction_type'] == "reminder_required":
+          })
             prompt.append({
-                "role": "user",
-                "content": "(Now the user has not responded in a while, you would say:)",
-            })
+                "role": "system",
+                "content": " Here we attached user informations: " + str(self.transcript_intro_messages) + "Answer the user's question based on the following information:" +
+                retrived_answer
+             })
+            print("Switched...")
+
+            transcript_messages = self.convert_transcript_to_openai_messages(request['transcript'])
+            skipMessageLength = len(self.transcript_intro_messages)
+            for count, message in enumerate(transcript_messages, 1):
+                if count > skipMessageLength:
+                    prompt.append(message)
+
+        print("Final prompt:", prompt)
         return prompt
+
 
     def draft_response(self, request):      
         start_time = time.time()
