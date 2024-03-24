@@ -16,8 +16,8 @@ class LlmClient:
             api_key=os.environ['AZURE_OPENAI_KEY'],
             api_version="2023-05-15"
         )
-        self.client = OpenAI(
-            api_key=os.environ['OPENAI_API_KEY'],
+        self.client = Groq(
+            api_key=os.environ['GROQ_API_KEY'],
         )
         # self.rag_client = RagClient()
         self.pineconeClient = PineconeDocumentProcessor()
@@ -59,7 +59,7 @@ class LlmClient:
 
     def prepare_prompt(self, request):
         retrived_answer = self.pineconeClient.query_index1(query=request['transcript'], program=program)
-        # print("rag retrieved answer: ", retrived_answer)
+        print("rag retrieved answer: ", retrived_answer)
         
         prompt = [{
             "role": "system",
@@ -88,12 +88,14 @@ class LlmClient:
         start_time = time.time()
         prompt = self.prepare_prompt(request)
         middle_time = time.time()
+        print("request", prompt)
         stream = self.client.chat.completions.create(
             model="mixtral-8x7b-32768", 
             messages=prompt,
             stream=True
         )
         end_time1 = time.time()
+        print(stream)
         isflag = True
         print("request process time: (from the time when request come and request body modified )", middle_time - start_time, start_time, middle_time)
         print("azure api called -> Time Taken:  ", end_time1-middle_time, " start and end time: ",middle_time, end_time1)

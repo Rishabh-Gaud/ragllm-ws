@@ -64,32 +64,13 @@ class PineconeDocumentProcessor:
             filter={"program": {"$eq": filter_filename}} if filter_filename else None
         )
         end = time.time()
+        print(end-start)
         # print(result)
         modifiedData = ""
         for doc in  result.matches:
-            modifiedData  += (doc.metadata['data'])
-        print(end-start, modifiedData)
+            modifiedData  += json.dumps(doc.metadata['data'])
         return modifiedData
 
-    # async def query_index_async(self, queries, top_k=5, filter_filename=None):
-    #     async def query_single(query):
-    #         query_vector = self.model.encode(query).tolist()
-    #         result = self.index.query(
-    #             vector=query_vector,
-    #             top_k=top_k,
-    #             include_metadata=True,
-    #             filter={"program": {"$eq": filter_filename}} if filter_filename else None
-    #         )
-    #         return [json.dumps(doc.metadata) for doc in result.matches]
-
-    #     start_time = time.time()
-    #     tasks = [query_single(query) for query in queries]
-    #     results = await asyncio.gather(*tasks)
-    #     end_time = time.time()
-
-    #     modified_data = ''.join(results)
-    #     print(end_time - start_time)
-    #     return modified_data
 
     def query_index1(self, query, top_k=10, program=None):
         user_content = ""
@@ -99,7 +80,7 @@ class PineconeDocumentProcessor:
                 # Concatenate the user's content
                 user_content += item["content"] + " "
            
-        query_vector = processor.model.encode(user_content).tolist()
+        query_vector = self.model.encode(user_content).tolist()
         result = self.index.query(
             vector=query_vector,
             top_k=top_k,
@@ -110,7 +91,7 @@ class PineconeDocumentProcessor:
         # print(result)
         modifiedData = ""
         for doc in  result.matches:
-            modifiedData  += json.dumps(doc.metadata)
+            modifiedData  += json.dumps(doc.metadata['data'])
         return modifiedData
 # Instantiate the PineconeDocumentProcessor class
 # processor = PineconeDocumentProcessor()
@@ -523,3 +504,23 @@ class PineconeDocumentProcessor:
 # Example query
 # result = processor.query_index("Why Choose the 1-Year LLM at USC Gould?", top_k=5, filter_filename="LLM - 1 year.txt")
 # print(result)
+
+# import os
+
+# from groq import Groq
+
+# client = Groq(
+#     api_key=os.environ.get("GROQ_API_KEY"),
+# )
+
+# chat_completion = client.chat.completions.create(
+#     messages=[
+#         {
+#             "role": "user",
+#             "content": "Explain the importance of low latency LLMs",
+#         }
+#     ],
+#     model="mixtral-8x7b-32768",
+# )
+
+# print(chat_completion.choices[0].message.content)
