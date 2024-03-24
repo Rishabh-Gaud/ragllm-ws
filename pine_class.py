@@ -68,7 +68,7 @@ class PineconeDocumentProcessor:
         modifiedData = ""
         for doc in  result.matches:
             modifiedData  += (doc.metadata['data'])
-        print(end-start)
+        print(end-start, modifiedData)
         return modifiedData
 
     # async def query_index_async(self, queries, top_k=5, filter_filename=None):

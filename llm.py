@@ -1,4 +1,5 @@
 from openai import AzureOpenAI
+from openai import OpenAI
 import os
 from pine_class import PineconeDocumentProcessor
 from groq import Groq
@@ -15,8 +16,8 @@ class LlmClient:
             api_key=os.environ['AZURE_OPENAI_KEY'],
             api_version="2023-05-15"
         )
-        self.client = Groq(
-            api_key=os.environ['GROQ_API_KEY'],
+        self.client = OpenAI(
+            api_key=os.environ['OPENAI_API_KEY'],
         )
         # self.rag_client = RagClient()
         self.pineconeClient = PineconeDocumentProcessor()

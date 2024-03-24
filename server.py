@@ -9,6 +9,7 @@ from llm import LlmClient
 # from rag import RagClient
 from pine_class import PineconeDocumentProcessor
 from groq import Groq
+from openai import OpenAI
 import time
 import asyncio
 import retellclient
@@ -42,9 +43,13 @@ pineconeClient = PineconeDocumentProcessor()
 retell = retellclient.RetellClient(
     api_key=os.environ['RETELL_API_KEY']
 )
-client = Groq(
-            api_key=os.environ['GROQ_API_KEY'],
+client = OpenAI(
+            api_key=os.environ['OPENAI_API_KEY'],
         )
+# client = Groq(
+#             api_key=os.environ['GROQ_API_KEY'],
+            
+#         )
 class RegisterCallRequestBody(BaseModel):
     agent_id: str
 
@@ -130,13 +135,21 @@ async def request_body(text, program):
             "content": text
         }
             ]
+        # print("print>>>>>>>>>>>>", prompt)
         stream = client.chat.completions.create(
-            model="mixtral-8x7b-32768", 
+            model="gpt-3.5-turbo", 
             messages=prompt,
         )
+        # stream = client.chat.completions.create(
+        #     model="mixtral-8x7b-32768",
+        #     messages=prompt,
+        #     # stream=True
+        # )
+        print(stream)
         # answer, ragtime, llmtime = pdf_rag_query_processor.answer(text)
         # data = document_retriever.retrieve_documents(text)
-        print(end_time - start_time)
+        
+        print(stream.choices[0].message.content, end_time - start_time)
         return {"answer": stream.choices[0].message.content, "rag time taken": end_time - start_time}
     except Exception as e:
         # Log the error for debugging purposes
