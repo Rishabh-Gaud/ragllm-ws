@@ -139,7 +139,7 @@ async def request_body(text, program):
         # answer, ragtime, llmtime = pdf_rag_query_processor.answer(text)
         # data = document_retriever.retrieve_documents(text)
         print(end_time - start_time)
-        return {"answer": stream.choices[0].message.content}
+        return {"answer": stream.choices[0].message.content, "rag time taken": end_time - start_time}
     except Exception as e:
         # Log the error for debugging purposes
         print("Error test call:", e)

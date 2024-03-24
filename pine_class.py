@@ -67,7 +67,7 @@ class PineconeDocumentProcessor:
         # print(result)
         modifiedData = ""
         for doc in  result.matches:
-            modifiedData  += json.dumps(doc.metadata)
+            modifiedData  += (doc.metadata['data'])
         print(end-start)
         return modifiedData
 
