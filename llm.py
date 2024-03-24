@@ -5,8 +5,9 @@ from groq import Groq
 # from rag import RagClient
 beginSentence = "Hi, this is the USC Gould School of Law LL.M. Admissions Office, how may I assist you today?"
 agentPrompt = "Task: As a representative of the USC Gould LL.M. Admissions Office your task is to assist students with their queries about the program."
-
+program=""
 import time
+import requests
 class LlmClient:
     def __init__(self):
         self.client= AzureOpenAI(
@@ -19,7 +20,20 @@ class LlmClient:
         )
         # self.rag_client = RagClient()
         self.pineconeClient = PineconeDocumentProcessor()
-    def draft_begin_messsage(self):
+    def draft_begin_messsage(self, call_id=""):
+        if(call_id!=""):
+            url = f'https://4w1405ijrl.execute-api.ap-south-1.amazonaws.com/webcall/get/{call_id}'
+
+            # Make the GET request
+            response = requests.get(url)
+            # Check if the request was successful (status code 200)
+            if response.status_code == 200:
+                # Print the response content
+                program = response.text
+                print(response.text)
+            else:
+                # Print an error message if the request was not successful
+                print(f"Error: {response.status_code} - {response.reason}")
         return {
             "response_id": 0,
             "content": beginSentence,
@@ -43,7 +57,7 @@ class LlmClient:
         return messages
 
     def prepare_prompt(self, request):
-        retrived_answer = self.pineconeClient.query_index1(query=request['transcript'])
+        retrived_answer = self.pineconeClient.query_index1(query=request['transcript'], program=program)
         # print("rag retrieved answer: ", retrived_answer)
         
         prompt = [{

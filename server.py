@@ -21,7 +21,6 @@ agentPrompt = "Task: As a representative of the USC Gould LL.M. Admissions Offic
 
 load_dotenv()
 
-
 #check
 
 app = FastAPI()
@@ -73,10 +72,9 @@ async def register_call(request_body: RegisterCallRequestBody):
 async def websocket_handler(websocket: WebSocket, call_id: str):
     await websocket.accept()
     print(f"Handle llm ws for: {call_id}")
-
     # send first message to signal ready of server
     response_id = 0
-    first_event = llm_client.draft_begin_messsage()
+    first_event = llm_client.draft_begin_messsage(call_id)
     await websocket.send_text(json.dumps(first_event))
 
     async def stream_response(request):
@@ -116,7 +114,7 @@ async def request_body(text, program):
     try: 
         start_time = time.time()
         # objectList, answer = rag_client.answer(text)
-        rag_data =await pineconeClient.query_index(text, filter_filename=program)
+        rag_data = pineconeClient.query_index(text, filter_filename=program)
         end_time = time.time()
         prompt = [{
             "role": "system",

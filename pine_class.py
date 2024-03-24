@@ -53,7 +53,7 @@ class PineconeDocumentProcessor:
                 ])
                 print("done...")
                 
-    async def query_index(self, query, top_k=5, filter_filename=None):
+    def query_index(self, query, top_k=5, filter_filename=None):
         query_vector = self.model.encode(query).tolist()
         start= time.time()
         result = self.index.query(
@@ -113,7 +113,7 @@ class PineconeDocumentProcessor:
             modifiedData  += json.dumps(doc.metadata)
         return modifiedData
 # Instantiate the PineconeDocumentProcessor class
-# processor1 = PineconeDocumentProcessor()
+# processor = PineconeDocumentProcessor()
 
 # dataset =[        
 #             {
@@ -520,6 +520,6 @@ class PineconeDocumentProcessor:
 
 # processor.process_documents(dataset)
 
-# # Example query
+# Example query
 # result = processor.query_index("Why Choose the 1-Year LLM at USC Gould?", top_k=5, filter_filename="LLM - 1 year.txt")
 # print(result)
