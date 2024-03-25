@@ -97,7 +97,7 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
             # print out transcript
             start_time = time.time()
             os.system('cls' if os.name == 'nt' else 'clear')
-            print(json.dumps(request, indent=4))
+            # print(json.dumps(request, indent=4))
             
             if 'response_id' not in request:
                 continue # no response needed, process live transcript update if needed
