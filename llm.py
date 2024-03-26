@@ -88,7 +88,7 @@ class LlmClient:
     #         })
     #     return prompt
     
-  def fetch_last_user_messages_until_agent(conversation):
+    def fetch_last_user_messages_until_agent(conversation):
         user_messages = []
         found_first_agent_message = False
 
