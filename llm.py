@@ -113,7 +113,7 @@ class LlmClient:
           })
             prompt.append({
                 "role": "system",
-                "content": " Here we attached user informations: " + str(self.transcript_intro_messages) + "Answer the user's question based on the following information:" +
+                "content": "Answer the user's question based on the following information:" +
                 retrived_answer
              })
             print("Switched...")
