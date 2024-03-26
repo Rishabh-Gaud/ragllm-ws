@@ -141,7 +141,7 @@ class LlmClient:
             # for count, message in enumerate(transcript_messages, 1):
             #     if count > skipMessageLength:
             #         prompt.append(message)
-            cont = fetch_last_user_messages_until_agent(transcript_messages)
+            cont = self.fetch_last_user_messages_until_agent(transcript_messages)
             print("jkasjfajkfbdsjfbsdjfbaljfbjasbfjabfadjbfdsjfjadbfadjfbja",cont)
             for  m in cont:
                 prompt.append(m)
