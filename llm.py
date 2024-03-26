@@ -97,8 +97,8 @@ class LlmClient:
         retrived_answer = self.pineconeClient.query_index1(query=request['transcript'], program=program)
         prompt = []
         system_count = self.system_counter(request['transcript'])
-
-        if system_count <= 3:
+        
+        if system_count <= -1:
             prompt.append({
                 "role": "system",
                 "content": '##Objective\nYou are gathering information about the student.\n\n## Style Guardrails\n- [Be concise] Keep your questions succinct and to the point. Ask one question or action item at a time.\n- [Be conversational] Use everyday language and be friendly. Avoid formal or complex language.\n\n## Response Guideline\n- [Overcome ASR errors] If there are errors, try to guess what the user is saying and respond accordingly. Be colloquial in asking for clarification.\n- [Stick to gathering information] Focus on gathering relevant information about the student.\n\n## Role\nAsk questions to gather information about the student.'
@@ -119,10 +119,11 @@ class LlmClient:
             print("Switched...")
 
             transcript_messages = self.convert_transcript_to_openai_messages(request['transcript'])
-            skipMessageLength = len(self.transcript_intro_messages)
+            print(transcript_messages)
+            # skipMessageLength = len(self.transcript_intro_messages)
             for count, message in enumerate(transcript_messages, 1):
-                if count > skipMessageLength:
-                    prompt.append(message)
+                # if count > skipMessageLength:
+                prompt.append(message)
 
         print("Final prompt:", prompt)
         return prompt
