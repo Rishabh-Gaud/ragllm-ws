@@ -4,8 +4,8 @@ import os
 from pine_class import PineconeDocumentProcessor
 from groq import Groq
 # from rag import RagClient
-beginSentence = "Hi, this is the USC Gould School of Law LL.M. Admissions Office, how may I assist you today?"
-agentPrompt = "Task: As a representative of the USC Gould LL.M. Admissions Office your task is to assist students with their queries about the program."
+beginSentence = "Hi, this is the USC Gould School of Law LLM Admissions Office. My name is Grace and I'd be happy to assist you."
+agentPrompt = "Task: As a representative of the USC Gould LLM Admissions Office your task is to assist students with their queries about the program."
 program=""
 import time
 import requests
@@ -113,10 +113,10 @@ class LlmClient:
         prompt = []
         system_count = self.system_counter(request['transcript'])
         
-        if system_count <= 3:
+        if system_count <= 2:
             prompt.append({
                 "role": "system",
-                "content": '##Objective\nYou are gathering information about the student.\n\n## Style Guardrails\n- [Be concise] Keep your questions succinct and to the point. Ask one question or action item at a time.\n- [Be conversational] Use everyday language and be friendly. Avoid formal or complex language.\n\n## Response Guideline\n- [Overcome ASR errors] If there are errors, try to guess what the user is saying and respond accordingly. Be colloquial in asking for clarification.\n- [Stick to gathering information] Focus on gathering relevant information about the student.\n\n## Role\nAsk questions to gather information about the student.'
+                "content": '##Objective\nYou are gathering information about the student.\n\n## Style Guardrails\n- [Be concise] Keep your responses brief and to the point. Ask one question or action item at a time.\n- [Be conversational] Use everyday language and be friendly. Avoid formal or complex language.\n\n## Response Guideline\n- [Overcome ASR errors] If there are errors, try to guess what the user is saying and respond accordingly. Be colloquial in asking for clarification.\n- [Stick to gathering information] Focus on gathering relevant information about the student.\n\n## Role\nStep 1: Ask the user if they're a prospective student, an applicant, or an enrolled student. Step 2: After receiving the student's response, ask them how can you help them.'
             })
             self.transcript_intro_messages = self.convert_transcript_to_openai_messages(request['transcript'])
             prompt.extend(self.transcript_intro_messages)
@@ -128,7 +128,7 @@ class LlmClient:
         #   })
             prompt.append({
                 "role": "system",
-                "content": "Task: As a representative of the USC Gould LL.M. Admissions Office your task is to assist students with their queries about the program. Answer the user's question based on the following information:" +
+                "content": "Task: As a representative of the USC Gould LLM Admissions Office your task is to assist students with their queries about the program. You will be penalized if you respond in more than 100 words. Answer the user's question based on the following information:" +
                 retrived_answer
              })
             
