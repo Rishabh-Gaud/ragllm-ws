@@ -119,7 +119,7 @@ async def request_body(text, program):
     try: 
         start_time = time.time()
         # objectList, answer = rag_client.answer(text)
-        rag_data = pineconeClient.query_index(text, filter_filename=program)
+        rag_data, totalfiles = pineconeClient.query_index(text, filter_filename=program)
         end_time = time.time()
         prompt = [
             {
@@ -147,12 +147,11 @@ async def request_body(text, program):
             messages=prompt,
             # stream=True
         )
-        print(stream)
         # answer, ragtime, llmtime = pdf_rag_query_processor.answer(text)
         # data = document_retriever.retrieve_documents(text)
         
         print(stream.choices[0].message.content, end_time - start_time)
-        return {"answer": stream.choices[0].message.content, "rag time taken": end_time - start_time}
+        return {"answer": stream.choices[0].message.content, "rag time taken": end_time - start_time, "rag data": totalfiles}
     except Exception as e:
         # Log the error for debugging purposes
         print("Error test call:", e)

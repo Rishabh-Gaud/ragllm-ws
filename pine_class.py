@@ -53,7 +53,7 @@ class PineconeDocumentProcessor:
                 ])
                 print("done...")
                 
-    def query_index(self, query, top_k=5, filter_filename=None):
+    def query_index(self, query, top_k=10, filter_filename=None):
         query_vector = self.model.encode(query).tolist()
         start= time.time()
         result = self.index.query(
@@ -67,9 +67,12 @@ class PineconeDocumentProcessor:
         print(end-start)
         # print(result)
         modifiedData = ""
+        totalfiles = []
+        print(result)
         for doc in  result.matches:
             modifiedData  += json.dumps(doc.metadata['data'])
-        return modifiedData
+            totalfiles.append({"id": doc.id, "filename": doc.metadata["filename"], "data": doc.metadata['data']})
+        return modifiedData, totalfiles
 
 
     def query_index1(self, query, top_k=10, program=None):
