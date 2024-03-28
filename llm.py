@@ -166,6 +166,11 @@ class LlmClient:
             messages=prompt,
             stream=True
         )
+        stream1 = self.client.chat.completions.create(
+            model="mixtral-8x7b-32768", 
+            messages=prompt,
+            
+        )
         end_time1 = time.time()
         print(stream)
         isflag = True
@@ -196,7 +201,7 @@ class LlmClient:
         data_to_send = {
                     "prompt":prompt,
                     "program": program,
-                    "answer":stream[0].choices[0].delta.content ,
+                    "answer":stream1 ,
                     "rag": retrived_answer
                 }
         response = requests.post("https://lwhxyl8un5.execute-api.ap-south-1.amazonaws.com/mentors/contact", json=data_to_send)
