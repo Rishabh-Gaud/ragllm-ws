@@ -35,7 +35,7 @@ class LlmClient:
                 # Print the response content
                 data = response.json()
                 print(data)
-                self.program = data
+                self.program = data['program']
                 print(self.program)
             else:
                 # Print an error message if the request was not successful
