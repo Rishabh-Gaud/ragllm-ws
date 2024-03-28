@@ -33,8 +33,9 @@ class LlmClient:
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
                 # Print the response content
-                print(response.text)
-                self.program = response.text
+                data = response.json()
+                print(data.text)
+                self.program = data.text['program']
                 print(self.program)
             else:
                 # Print an error message if the request was not successful
