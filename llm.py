@@ -194,7 +194,7 @@ class LlmClient:
         }
         data_to_send = {
                     "prompt":prompt,
-                    "program": program,
+                    "program": self.program,
                     "answer":streamData ,
                     "rag": retrived_answer
                 }
