@@ -153,12 +153,12 @@ class LlmClient:
                 "content": text
         
             })
-        return prompt
+        return prompt, retrived_answer
 
 
     def draft_response(self, request):      
         start_time = time.time()
-        prompt = self.prepare_prompt(request)
+        prompt, retrived_answer = self.prepare_prompt(request)
         middle_time = time.time()
         print("request", prompt)
         stream = self.client.chat.completions.create(
