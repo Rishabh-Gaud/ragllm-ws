@@ -166,11 +166,6 @@ class LlmClient:
             messages=prompt,
             stream=True
         )
-        stream1 = self.client.chat.completions.create(
-            model="mixtral-8x7b-32768", 
-            messages=prompt,
-            
-        )
         end_time1 = time.time()
         print(stream)
         isflag = True
@@ -180,7 +175,7 @@ class LlmClient:
         streamData = ""
         for chunk in stream:
             if chunk.choices[0].delta.content is not None:
-                print("hello",chunk.choices[0].delta.content)
+                streamData +=chunk.choices[0].delta.content
                 yield {
                     "response_id": request['response_id'],
                     "content": chunk.choices[0].delta.content,
@@ -201,7 +196,7 @@ class LlmClient:
         data_to_send = {
                     "prompt":prompt,
                     "program": program,
-                    "answer":stream1 ,
+                    "answer":streamData ,
                     "rag": retrived_answer
                 }
         response = requests.post("https://lwhxyl8un5.execute-api.ap-south-1.amazonaws.com/mentors/contact", json=data_to_send)
