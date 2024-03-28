@@ -6,7 +6,6 @@ from groq import Groq
 # from rag import RagClient
 beginSentence = "Hi, this is the USC Gould School of Law LLM Admissions Office. My name is Grace and I'd be happy to assist you."
 agentPrompt = "Task: As a representative of the USC Gould LLM Admissions Office your task is to assist students with their queries about the program."
-program=""
 import time
 import requests
 class LlmClient:
@@ -34,7 +33,7 @@ class LlmClient:
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
                 # Print the response content
-                program = response.text
+                self.program = response.text
                 print(response.text)
             else:
                 # Print an error message if the request was not successful
@@ -109,7 +108,8 @@ class LlmClient:
         return system_count
 
     def prepare_prompt(self, request):
-        retrived_answer = self.pineconeClient.query_index1(query=request['transcript'], program=program)
+        retrived_answer = self.pineconeClient.query_index1(query=request['transcript'], program=self.program)
+        print(self.program, retrived_answer)
         prompt = []
         system_count = self.system_counter(request['transcript'])
         
@@ -132,7 +132,6 @@ class LlmClient:
                 retrived_answer
              })
             
-            print(retrived_answer)
             print("Switched...")
 
             transcript_messages = self.convert_transcript_to_openai_messages(request['transcript'])
