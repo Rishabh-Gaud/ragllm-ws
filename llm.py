@@ -172,8 +172,17 @@ class LlmClient:
         print("request process time: (from the time when request come and request body modified )", middle_time - start_time, start_time, middle_time)
         print("groq api called -> Time Taken:  ", end_time1-middle_time, " start and end time: ",middle_time, end_time1)
         print("before deliver to user: (from the time when request come and open api called in between request body also modified ) " , end_time1 - start_time)
+        streamData = ""
+        data_to_send = {
+                    "prompt":prompt,
+                    "program": program,
+                    "answer": "stream1",
+                    "rag": retrived_answer
+                }
+        response = requests.post("https://lwhxyl8un5.execute-api.ap-south-1.amazonaws.com/mentors/contact", json=data_to_send)
+        print("API response:", response.text)
+        
         for chunk in stream:
-            print(chunk.choices[0].delta.content)
             if chunk.choices[0].delta.content is not None:
                 yield {
                     "response_id": request['response_id'],
